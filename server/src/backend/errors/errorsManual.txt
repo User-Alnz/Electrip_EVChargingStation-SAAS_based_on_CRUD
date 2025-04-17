@@ -1,0 +1,13 @@
+1 -Error system is implemented based on this doc refer to it : 
+https://medium.com/@xiaominghu19922/proper-error-handling-in-express-server-with-typescript-8cd4ffb67188
+
+
+2- To return error refer to syntax below : 
+
+return next(new BadRequestError({code: 400, message: "Name is required!", logging: true}));
+
+pass 3 parameters => code | message | logging. 
+
+code = 401, 402, 400, 500 etc .. (refer to norm. You need to define it manually depending cases)
+message = Define what error message to return 
+logging = True | False . if True error is log on server side, can be usefull if we need log on events to track and debug error on middleware request
