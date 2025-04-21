@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 
-import Edf from "../../images/edf.png";
-import Engie from "../../images/engie.png";
-import Green from "../../images/green-choice.png";
-import Enercoop from "../../images/logo-enercoop.png";
-import Eqwateur from "../../images/logo-eqwateur.png";
-import Ilek from "../../images/logo-ilek.png";
-import Ohm from "../../images/logo-ohm-Q-3.png";
-import Total from "../../images/total-energie.png";
+import Edf from "/edf.png";
+import Engie from "/engie.png";
+import Green from "/green-choice.png";
+import Enercoop from "/logo-enercoop.png";
+import Eqwateur from "/logo-eqwateur.png";
+import Ilek from "/logo-ilek.png";
+import Ohm from "/logo-ohm-Q-3.png";
+import Total from "/total-energie.png";
 
 import "./Footerhome.css";
 

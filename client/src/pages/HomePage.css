@@ -94,7 +94,7 @@
   color: #2e3333;
   text-align: left;
   line-height: 24px;
-  list-style-image: url("../images/li_about.png");
+  list-style-image: url("/li_about.png");
 }
 .imgHome {
   width: 100%;

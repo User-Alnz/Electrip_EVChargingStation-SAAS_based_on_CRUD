@@ -3,10 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "../Nav/Nav.css";
 
-import BurgerMenu from "../../images/Burger-menu.png";
-import IconHomeMap from "../../images/icon_home_map.png";
-import UserProfileImage from "../../images/login_gris.png";
-import Logo from "../../images/logo_mobile_ELECTRIP.png";
+import BurgerMenu from "/Burger-menu.png";
+import IconHomeMap from "/icon_home_map.png";
+import UserProfileImage from "/login_gris.png";
+import Logo from "/logo_mobile_ELECTRIP.png";
 
 import { useAuth } from "../../contexts/AuthContext";
 

@@ -1,5 +1,5 @@
-import Wire from "../../images/btn_borne_minimenu.png";
-import Car from "../../images/btn_voiture_minimenu.png";
+import Wire from "/btn_borne_minimenu.png";
+import Car from "/btn_voiture_minimenu.png";
 import "./Footer.css";
 
 function Footer() {
