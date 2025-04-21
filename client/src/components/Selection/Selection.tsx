@@ -2,7 +2,7 @@ import "./Selection.css";
 import type { LatLngTuple } from "leaflet";
 import { useEffect, useState } from "react";
 import { useCoordinates } from "../../contexts/EVStationContext.tsx";
-import borne from "../../images/Borne_recharge_illustration.png";
+import borne from "/Borne_recharge_illustration.png";
 
 interface coordinatesOfCurrentStation {
   id: number;

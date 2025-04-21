@@ -59,7 +59,7 @@ export function CoordinatesProvider({ children }: ContextProviderProps) {
 export const useCoordinates = () => {
   const value = useContext(ToCoordinatesContexContext);
   if (value == null) {
-    throw new Error("useTheme has to be used within <ThemeProvider>");
+    throw new Error("useTheme has to be used within <ToCoordinatesContexContext>");
   }
   return value;
 };

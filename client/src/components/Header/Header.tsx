@@ -2,7 +2,7 @@ import NavHome from "../Nav/NavHome";
 
 import "./Header.css";
 
-import IconScroll from "../../images/icon_scroll.png";
+import IconScroll from "/icon_scroll.png";
 
 function Header() {
   return (

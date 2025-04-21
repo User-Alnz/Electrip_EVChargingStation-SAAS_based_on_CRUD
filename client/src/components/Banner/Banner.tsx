@@ -1,4 +1,4 @@
-import Wire from "../../images/mini_icone_borne.png";
+import Wire from "/mini_icone_borne.png";
 import "./banner.css";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";

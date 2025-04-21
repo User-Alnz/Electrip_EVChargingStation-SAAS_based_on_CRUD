@@ -6,13 +6,13 @@ import Header from "../components/Header/Header";
 import "../App.css";
 import "./HomePage.css";
 
-import Buttonplus from "../images/btn_+.png";
-import ImgAbout from "../images/img_about.jpg";
-import ImgCharger from "../images/img_borne.jpg";
-import ImgCar from "../images/img_voiture.jpg";
-import MarkerAbout from "../images/marker_about.png";
-import MarkerCharger from "../images/marker_borne.png";
-import MarkerCar from "../images/marker_voiture.png";
+import Buttonplus from "/btn_+.png";
+import ImgAbout from "/img_about.jpg";
+import ImgCharger from "/img_borne.jpg";
+import ImgCar from "/img_voiture.jpg";
+import MarkerAbout from "/marker_about.png";
+import MarkerCharger from "/marker_borne.png";
+import MarkerCar from "/marker_voiture.png";
 
 function HomePage() {
   return (
