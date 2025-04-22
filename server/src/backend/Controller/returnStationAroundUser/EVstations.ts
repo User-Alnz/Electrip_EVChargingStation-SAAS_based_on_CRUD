@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
-import BadRequestError from "../errors/badRequestErrors.js";
-import EVStationsDB from "../Model/EVStationsDB.js";
+import BadRequestError from "../../errors/badRequestErrors.js";
+import EVStationsDB from "../../Model/EVStationsDB.js";
 
 type catchQueryParameters = { latitude: string; longitude: string };
 
