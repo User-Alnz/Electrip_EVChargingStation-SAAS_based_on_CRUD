@@ -2,10 +2,9 @@ import { Router } from "express";
 
 const router = Router();
 
-/* Example to config router */
-import middlewareExample from "./Controller/middlewareExample.js";
+import EVstations from "./Controller/returnStationAroundUser/EVstations.js";
 
-router.get("/testAsync", middlewareExample.AsyncRead);
-router.get("/testSync", middlewareExample.SyncRead);
+router.get("/EVstations", EVstations.AsyncRead_returnStationsAroundUser);
+
 
 export default router;
