@@ -6,10 +6,10 @@ import { useCoordinates } from "../../contexts/EVStationContext.tsx";
 
 function banner() {
   //--- This  functions check if there is available bornes
-  const countAvailableBornes = useCallback(
-    (available_bornesArray: boolean[], booleanType: boolean): number => {
+  const countNoneAvailableBornes = useCallback(
+(available_bornesArray: boolean[], booleanType: boolean): number => {
       const count = available_bornesArray.filter(
-        (borne) => Boolean(borne) === booleanType,
+        (borne) => Boolean(borne) === booleanType, 
       ).length;
       return count;
     },
@@ -18,13 +18,13 @@ function banner() {
 
   const isAvailable = useCallback(
     (available_bornesArray: boolean[]): boolean => {
-      const resultAvailable = countAvailableBornes(available_bornesArray, true); // if borne id defined as 1 Check if there is at least one borne available.
+      const resultNoneAvailable = countNoneAvailableBornes(available_bornesArray, false); 
 
-      if (resultAvailable === available_bornesArray.length) return false; //"🔴 Non Disponible";
+      if (resultNoneAvailable === available_bornesArray.length) return false; //"🔴 Non Disponible";
 
       return true; //"🟢 Disponible";
     },
-    [countAvailableBornes],
+    [countNoneAvailableBornes],
   );
 
   //--- This  functions  if there is available bornes --- END
