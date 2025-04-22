@@ -8,15 +8,15 @@ const AsyncRead_returnStationsAroundUser : RequestHandler = async (req, res, nex
 
     try {
 
-        const catchQueryParameters: catchQueryParameters =
-        req.query as catchQueryParameters;
+      const catchQueryParameters: catchQueryParameters =
+      req.query as catchQueryParameters;
 
-        if(!catchQueryParameters)
-        return next(new BadRequestError({code: 400, message: "Invalid Endpoints parameters", logging: true, context : { ["Request issue"]: "Verify coordinates send in query" } }));
+      if(!catchQueryParameters)
+      return next(new BadRequestError({code: 400, message: "Invalid Endpoints parameters", logging: true, context : { ["Request issue"]: "Verify coordinates send in query" } }));
 
-        const StationsLocation = await EVStationsDB.getStationLocalisation(catchQueryParameters);
+      const StationsLocation = await EVStationsDB.getStationLocalisation(catchQueryParameters);
 
-        res.status(202).json(StationsLocation);
+      res.status(202).json(StationsLocation);
 
     } catch (err) {
       next(err);
