@@ -79,7 +79,7 @@ function countAvailableBornes(
 
 //if any other borne is available does return "non dispo"
 function isAvailable(available_bornesArray: boolean[]): JSX.Element {
-  const resultAvailable = countAvailableBornes(available_bornesArray, true); // if borne id defined as 1
+  const resultAvailable = countAvailableBornes(available_bornesArray, false); // if borne id defined as 0
 
   if (resultAvailable === available_bornesArray.length)
     return <p className="statut-notavailable">🔴 Non Disponible</p>;
@@ -94,8 +94,8 @@ function writeBorneDescription(available_bornesArray: boolean[]): string {
 }
 
 function listOfAvailableBornes(available_bornesArray: boolean[]): JSX.Element {
-  const borneNotAvailable = countAvailableBornes(available_bornesArray, true);
-  const borneAvailable = countAvailableBornes(available_bornesArray, false);
+  const borneNotAvailable = countAvailableBornes(available_bornesArray, false);
+  const borneAvailable = countAvailableBornes(available_bornesArray, true);
 
   return (
     <div>
@@ -175,7 +175,7 @@ function Selection() {
 
               <section className="time">
                 <p>Temps d'utilisation</p>
-                <b>⏱️ 2 jours</b>
+                <b>⏱️ 1 heure</b>
               </section>
             </div>
           </section>

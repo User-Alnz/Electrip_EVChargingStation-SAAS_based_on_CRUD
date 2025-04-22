@@ -1,13 +1,28 @@
 import type { LatLngTuple } from "leaflet";
 import { useCallback, useEffect, useState } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-import type { localisation } from "../../../../server/src/modules/stationLocation/stationLocationRepository";
 import "./DisplayMap.css";
 import "leaflet/dist/leaflet.css";
 import type L from "leaflet";
 import { useCoordinates } from "../../contexts/EVStationContext.tsx";
 import LeafletIconsRegister from "./markerIconsOnmap.ts";
 
+//Json return from /EVstations/?latitude=
+type localisation = {
+  id_station: string;
+  n_station: string;
+  ad_station: string;
+  coordinates: LatLngTuple;  //[xlongitude: number, ylatitude: number];
+  ylatitude: string;
+  nbre_pdc: number;
+  acces_recharge: string;
+  puiss_max: number;
+  type_prise: string;
+  id_bornes: number[];
+  available_bornes: boolean[];
+};
+
+//ExtendedLocalisation => the entries we only use
 type ExtendedLocalisation = Omit<localisation, "coordinates"> & {
   id: number;
   coordinates: LatLngTuple; //location Latitude / Longitude
@@ -64,7 +79,7 @@ function DisplayMap() {
 
   //this function parse available_bornes from fetch to define which icone to use form LeafletIconsRegister.
   function defineWhichIconToPick(available_bornes: boolean[]) {
-    const count = available_bornes.filter((borne) => !borne).length;
+    const count = available_bornes.filter((borne) => borne).length; // get only if 1 || True
 
     if (available_bornes.length === count) {
       return LeafletIconsRegister.stationLocationBlue;
