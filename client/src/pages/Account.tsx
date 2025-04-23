@@ -25,7 +25,7 @@ function Account() {
     firstname: "",
     lastname: "",
     email: "",
-    hashed_password: "",
+    password: "",
   });
 
   const handleChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +40,7 @@ function Account() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/register`,
+        `${import.meta.env.VITE_API_URL}/register`,
         {
           method: "post",
           headers: { "Content-Type": "application/json" },

@@ -78,8 +78,6 @@ class EVStationsModel {
             querryCoords.longitudeEast,
           ],
         );
-
-        console.log(rows)
     
         await this.createCoordinatesEntry(rows);
 
