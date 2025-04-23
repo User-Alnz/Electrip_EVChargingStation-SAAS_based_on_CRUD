@@ -12,9 +12,7 @@
     "resolveJsonModule": true, // If you're using JSON files
     "removeComments": true  //remove all comments 
   },
-  "include": [
-    "src/**/*" // All TypeScript files in the src directory to compile Ts over it 
-    ,  "__tests__/**/*"   ], // Include test directory only dev env
+  "include": ["src/**/*" ], // All TypeScript files in the src directory to compile Ts over it 
   "exclude": [
     "node_modules", "**/*.test.ts", "**/__tests__" //Exclude all test and test file when compiling to .js 
   ]

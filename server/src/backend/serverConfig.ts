@@ -17,7 +17,7 @@ const server = express();
         
     server.use(cors({
         origin: [process.env.CLIENT_URL as string], // Define origins allowed to listen requests
-        methods: 'GET,POST', // These  Define http methods allowed
+        methods: 'GET,POST,PUT,DELETE', // These  Define http methods allowed
         //allowedHeaders: ['Content-Type', 'Authorization'] // Allow only certain request headers
     }));
 
