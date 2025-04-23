@@ -6,7 +6,7 @@ export default {
   transform: {
     "^.+\\.tsx?$": ["ts-jest", {
       useESM: true,
-      tsconfig: "tsconfig.json", // optional, but helps Jest know where to look
+      tsconfig: "tsconfig.dev.json", // use tsconfig.dev.json which include __test__/ for Jest
     }],
   },
   moduleNameMapper: {

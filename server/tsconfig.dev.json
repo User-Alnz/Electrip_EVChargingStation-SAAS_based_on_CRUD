@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",   // Can be updated beased on New Release and need
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "outDir": "../serverBuilt/dist", // Output folder for compiled JS files
+      "rootDir": "./src", // Folder where your TypeScript files are located
+      "resolveJsonModule": true, // If you're using JSON files
+      "removeComments": true  //remove all comments 
+    },
+    "include": [
+      "src/**/*" ,// All TypeScript files in the src directory to compile Ts over it 
+      "**/*.test.ts", "**/__tests__" 
+      ], 
+    "exclude": [
+      "node_modules" //Exclude all test and test file when compiling to .js 
+    ]
+}
