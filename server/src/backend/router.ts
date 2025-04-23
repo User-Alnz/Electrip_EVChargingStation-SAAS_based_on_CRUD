@@ -2,9 +2,13 @@ import { Router } from "express";
 
 const router = Router();
 
-import EVstations from "./Controller/returnStationAroundUser/EVstations.js";
+import EVstations from "./Controller/GetEVStationAroundUser/EVstations.js";
 
-router.get("/EVstations", EVstations.AsyncRead_returnStationsAroundUser);
+router.get("/EVstations", EVstations.Read_returnStationsAroundUser);
+
+import bookAborne from "./Controller/Reservation/bookAborne.js";
+
+router.put("/bookAborn", bookAborne.Update_BookAborne)
 
 
 export default router;

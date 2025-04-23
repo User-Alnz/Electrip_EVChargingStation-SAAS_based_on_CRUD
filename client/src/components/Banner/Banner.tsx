@@ -38,7 +38,6 @@ function banner() {
         },
         body: JSON.stringify({
           id_station: coordinatesOfCurrentStation?.id,
-          available_bornes: true,
         }),
       }).then((res) => {
         if (res.status === 200) {
