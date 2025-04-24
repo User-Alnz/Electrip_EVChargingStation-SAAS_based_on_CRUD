@@ -14,5 +14,6 @@ import HandlePassword from "./Controller/Authentification/HandlePassword.js";
 import RegisterUser from "./Controller/Authentification/RegisterUser.js";
 
 router.post("/register", HandlePassword.hashPassword, RegisterUser.saveInDB);
+router.post( "/login", HandlePassword.passwordVerify);
 
 export default router;

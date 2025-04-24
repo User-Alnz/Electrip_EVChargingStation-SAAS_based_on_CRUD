@@ -67,7 +67,7 @@ function Account() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/login`,
+        `${import.meta.env.VITE_API_URL}/login`,
         {
           method: "post",
           headers: { "Content-Type": "application/json" },
@@ -79,7 +79,12 @@ function Account() {
         const user = await response.json();
         login(user);
         navigate("/"); // Redirection sur la homepage en cas de succès
-      } else {
+        toast.info("Vous êtes connecté ! 😊");
+      }
+      else if(response.status === 401){
+        toast.error("Email ou mot de passe invalides");
+      } 
+      else {
         toast.error("Une erreur s'est produite, veuillez réessayer");
       }
     } catch (err) {
