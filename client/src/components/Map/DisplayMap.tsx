@@ -5,6 +5,7 @@ import "./DisplayMap.css";
 import "leaflet/dist/leaflet.css";
 import type L from "leaflet";
 import { useCoordinates } from "../../contexts/EVStationContext.tsx";
+import { useAuth } from "../../contexts/AuthContext.tsx";
 import LeafletIconsRegister from "./markerIconsOnmap.ts";
 
 //Json return from /EVstations/?latitude=
@@ -55,7 +56,8 @@ function DisplayMap() {
   >([]);
   const { setCoordinatesOfCurrentStation } = useCoordinates();
   const { location, setLocation } = useCoordinates();
-
+  const { auth } = useAuth();
+ 
   //this function get latitude & longitude from browser  and use it later to fetch / get stations around user
   const getCurrentLocationOfUser = useCallback((): Promise<
     [number, number]
@@ -105,7 +107,17 @@ function DisplayMap() {
 
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/EVstations/?latitude=${newLocation[0]}&longitude=${newLocation[1]}`,
-        );
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${auth?.token}`,
+              'Content-Type': 'application/json',
+            },
+        });
+        
+        if (!response.ok) 
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        
         const data = await response.json();
         setEVStationCoordinates(data);
       } catch (error) {

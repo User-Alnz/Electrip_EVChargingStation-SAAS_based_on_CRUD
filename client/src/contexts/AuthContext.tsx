@@ -10,7 +10,6 @@ interface ContextProviderProps {
 
 export type User = {
   id: number;
-  name: string;
   email: string;
   firstname: string;
   lastname: string;
