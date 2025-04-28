@@ -31,12 +31,15 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 // Fournisseur du contexte d'authentification
 export function AuthProvider({ children }: ContextProviderProps) {
-  const [auth, setAuth] = useState(null as Auth | null);
 
-  // Création de compte
-  // Rien ici tout se passe dans Account.tsx
+  const [auth, setAuth] = useState<Auth | null>(
+    // ➔ load session storage at first call of setAuth() 
+    () => {
+      const storedUser = sessionStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : null;
+  });
 
-  // Connexion au compte
+  
   const login = useCallback(
     (user: Auth) => {
       if (auth !== null) {
@@ -44,15 +47,23 @@ export function AuthProvider({ children }: ContextProviderProps) {
         return;
       }
       setAuth(user);
+
+      //this store data in browser. Last until quit tab
+      sessionStorage.setItem("user", JSON.stringify(user));
+
       toast.success(`Bonjour ${user.user.firstname} ! 😊`);
     },
     [auth],
   );
-  // Déconnexion
+
+
   const logout = useCallback(() => {
     if (auth !== null) {
       toast.info(`À bientôt ${auth.user.firstname}`);
       setAuth(null);
+
+      //this clear data from browser.
+      sessionStorage.removeItem("user");
     }
   }, [auth]);
 
