@@ -1,4 +1,3 @@
-import { error } from "console";
 import { Database, QueryResult, RowsResult } from "../../Database/DatabaseConnection.js"
 import  SQL  from "../../Database/DatabaseConnection.js"
 import type { MysqlError } from "../errors/ModelErrors.js"
