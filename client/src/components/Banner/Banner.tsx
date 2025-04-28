@@ -3,6 +3,7 @@ import "./banner.css";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useCoordinates } from "../../contexts/EVStationContext.tsx";
+import { useAuth } from "../../contexts/AuthContext.tsx";
 
 function banner() {
   //--- This  functions check if there is available bornes
@@ -30,11 +31,13 @@ function banner() {
   //--- This  functions  if there is available bornes --- END
 
   const handleClickReservation = () => {
+
     try {
       fetch(`${import.meta.env.VITE_API_URL}/bookAborn`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
+            'Authorization': `Bearer ${auth?.token}`,
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           id_station: coordinatesOfCurrentStation?.id,
@@ -56,6 +59,7 @@ function banner() {
   };
 
   const { coordinatesOfCurrentStation } = useCoordinates();
+  const { auth } = useAuth();
   const [available, setAvailable] = useState(false);
 
   useEffect(() => {
