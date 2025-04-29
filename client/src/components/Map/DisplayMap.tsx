@@ -7,6 +7,7 @@ import type L from "leaflet";
 import { useCoordinates } from "../../contexts/EVStationContext.tsx";
 import { useAuth } from "../../contexts/AuthContext.tsx";
 import LeafletIconsRegister from "./markerIconsOnmap.ts";
+import Loader from "../Loader/loader.tsx";
 
 //Json return from /EVstations/?latitude=
 type localisation = {
@@ -54,10 +55,11 @@ function DisplayMap() {
   const [EVStationcoordinates, setEVStationCoordinates] = useState<
     ExtendedLocalisation[]
   >([]);
+  const [isEVStationcoordinatesLoaded, setIsEVStationcoordinates] = useState<boolean>(false)
   const { setCoordinatesOfCurrentStation } = useCoordinates();
   const { location, setLocation } = useCoordinates();
   const { auth } = useAuth();
- 
+
   //this function get latitude & longitude from browser  and use it later to fetch / get stations around user
   const getCurrentLocationOfUser = useCallback((): Promise<
     [number, number]
@@ -98,6 +100,10 @@ function DisplayMap() {
     return LeafletIconsRegister.stationLocationBlue;
   }
 
+  function delay(milisecond : number) {
+    return new Promise(resolve => setTimeout(resolve, milisecond));
+  }
+
   useEffect(() => {
     //this function fetch/get all satision Arround user location
     const returnAllStationsAroundUSer = async () => {
@@ -119,7 +125,11 @@ function DisplayMap() {
           throw new Error(`Error: ${response.status} - ${response.statusText}`);
         
         const data = await response.json();
+
+        await delay(3000); // simply to run loader animation at least 3 second
+
         setEVStationCoordinates(data);
+        setIsEVStationcoordinates(true);
       } catch (error) {
         console.error("Error fetching location or data:", error);
       }
@@ -129,27 +139,35 @@ function DisplayMap() {
   }, [getCurrentLocationOfUser, setLocation]);
 
   return (
+   
     <section>
-      <MapContainer
-        className="map"
-        center={location} // Load map to Paris
-        zoom={12}
-        scrollWheelZoom={true}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
-        />
-        {EVStationcoordinates.map((item) => (
+
+      {!isEVStationcoordinatesLoaded ? (<Loader/>) : null}
+
+        <MapContainer
+          className="map"
+          center={location} // Load map to Paris
+          zoom={12}
+          scrollWheelZoom={true}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
+          />
+
+          {EVStationcoordinates.map((item) => (
           <Marker
             key={item.id}
             position={item.coordinates}
             icon={defineWhichIconToPick(item.available_bornes)}
             eventHandlers={{ click: () => handleMarkerClick(item) }}
-          />
-        ))}
-        <LocationMarker />
-      </MapContainer>
+                />
+          ))}
+
+          
+          <LocationMarker />
+        </MapContainer>
+
     </section>
   );
 }
