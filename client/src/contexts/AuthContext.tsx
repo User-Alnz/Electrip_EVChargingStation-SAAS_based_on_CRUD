@@ -39,7 +39,6 @@ export function AuthProvider({ children }: ContextProviderProps) {
       return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  
   const login = useCallback(
     (user: Auth) => {
       if (auth !== null) {

@@ -15,28 +15,28 @@ import CarMap from "./pages/CarMap";
 import ChargerMap from "./pages/ChargerMap";
 import HomePage from "./pages/HomePage";
 
-// Import additional components for new routes
-// Try creating these components in the "pages" folder
-
-// import About from "./pages/About";
-// import Contact from "./pages/Contact";
-
 /* ************************************************************************* */
 
-// Create router configuration with routes
-// You can add more routes as you build out your app!
+import ProtectedRoute from "./contexts/ProtectedRoutes";
+
 const router = createBrowserRouter([
   {
     path: "/", // The root path
-    element: <HomePage />, // Renders the HomePage component for the homepage
+    element: <HomePage />
   },
   {
     path: "/trouver_une_borne",
-    element: <ChargerMap />,
+    element: 
+    (<ProtectedRoute>
+        <ChargerMap />
+      </ProtectedRoute>)
   },
   {
     path: "/trouver_une_voiture",
-    element: <CarMap />,
+    element: 
+    (<ProtectedRoute>
+        <CarMap />
+      </ProtectedRoute>)
   },
   {
     path: "/mon_compte",

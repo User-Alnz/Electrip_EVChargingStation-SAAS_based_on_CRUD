@@ -100,13 +100,12 @@ function NavHome() {
               className="nav-home-icon"
             />
           </Link>
-          <Link to="/trouver_une_borne" className="link">
+          {auth ? (<Link to="/trouver_une_borne" className="link">
             Trouver une borne
-          </Link>
-          <Link to="/trouver_une_voiture" className="link">
+          </Link>) : null}
+          {auth ? ( <Link to="/trouver_une_voiture" className="link">
             Trouver une voiture
-          </Link>
-
+          </Link>) : null}
           {auth ? (
             <div
               onClick={handleLogout}
