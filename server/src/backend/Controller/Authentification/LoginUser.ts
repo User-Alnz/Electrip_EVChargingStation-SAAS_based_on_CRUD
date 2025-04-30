@@ -50,6 +50,13 @@ const provideToken : RequestHandler = async (req :changeReqForNextMiddleware, re
     }
 }
 
+interface JWTerror{
+    name: string, //ex => "TokenExpiredError",
+    message:  string, //ex => "jwt expired",
+    expiredAt:  string//ex =>"2025-04-30T07:58:08.000Z"
+}
+  
+
 const verifyToken : RequestHandler = async (req, res, next) => 
 {
     try{
@@ -72,7 +79,16 @@ const verifyToken : RequestHandler = async (req, res, next) =>
         
         next();
     }
-    catch(err){
+    catch(err : JWTerror | any ){
+
+        if(err.name == "TokenExpiredError")
+        return next(new BadRequestError({code: 403, message: "Token expired", logging: true, 
+        context : { ["Invalid Creditentials"] : "Not Authorized" } }));
+
+        else
+        return next(new BadRequestError({code: 401, message: "Invalid method auth", logging: true, 
+        context : { ["Invalid Creditentials"] : "Not Authorized" } }));
+
         next(err);
     }
     
