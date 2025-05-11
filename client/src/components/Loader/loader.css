@@ -1,0 +1,24 @@
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 120px;
+    height: 20px;
+    -webkit-mask:linear-gradient(90deg,#000 70%,#0000 0) 0/20%;
+    background:
+     linear-gradient(#00aadc 0 0) 0/0% no-repeat
+     #ddd;
+    animation: l4 2s infinite steps(6);
+  }
+  @keyframes l4 {
+      100% {background-size:120%}
+  }
+
+.loaderWrapper{
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    z-index: 1000;
+}
