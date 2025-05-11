@@ -8,7 +8,8 @@ import RegisterUser from "./Controller/Authentification/RegisterUser.js";
 import LoginUser from "./Controller/Authentification/LoginUser.js";
 
 router.post("/register", HandlePassword.hashPassword, RegisterUser.saveInDB);
-router.post( "/login", HandlePassword.passwordVerify,  LoginUser.provideToken);
+router.post("/login", HandlePassword.passwordVerify,  LoginUser.provideToken);
+router.get("/api", LoginUser.verifyRefreshToken);
 
 // -- get all station around user
 import EVstations from "./Controller/GetEVStationAroundUser/EVstations.js";

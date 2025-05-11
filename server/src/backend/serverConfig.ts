@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import router from "./router.js";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -19,10 +20,12 @@ const server = express();
         origin: [process.env.CLIENT_URL as string], // Define origins allowed to listen requests
         methods: 'GET,POST,PUT,DELETE', // These  Define http methods allowed
         //allowedHeaders: ['Content-Type', 'Authorization'] // Allow only certain request headers
+        credentials: true
     }));
 
 /* Setting middleware accepted format by server */
 
+    server.use(cookieParser()); // read cookie | add new instance to req like req.cookies.jwt
     server.use(express.json()); //json format data
     //server.use(express.urlencoded()); //url data encoded like in body POST http method
     //server.use(express.text()); //text data
