@@ -77,8 +77,7 @@ interface JWTerror{
 const verifyToken : RequestHandler = async (req, res, next) => 
 {
     try{
-        console.log("got called => verifyToken \n")
-        const authHeader = req.headers.authorization
+        const authHeader = req.headers.authorization;
         
         if(authHeader == null)
         return next(new BadRequestError({code: 401, message: "Invalid request", logging: false, 
@@ -129,7 +128,6 @@ const verifyRefreshToken : RequestHandler = async (req, res, next) => {
         if(req.cookies?.jwt)
         {
             const refreshToken= req.cookies.jwt;
-            console.log("got called => verifyRefreshToken \nrefreshToken still hashed: ", refreshToken)
 
             jwt.verify( 
                 refreshToken,
@@ -144,8 +142,6 @@ const verifyRefreshToken : RequestHandler = async (req, res, next) => {
                     else{
 
                         const {email} = decoded as decodedRefreshToken;
-
-                        console.log(email)
 
                         const RefreshUserInfo : UserInfo | false =  await LoginUserDB.verifyUserEmail(email);
                         
