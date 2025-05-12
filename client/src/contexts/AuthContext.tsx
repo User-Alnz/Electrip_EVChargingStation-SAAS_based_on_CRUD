@@ -22,6 +22,7 @@ export type Auth = {
 
 interface AuthContextValue {
   auth: Auth | null;
+  setAuth : React.Dispatch<React.SetStateAction<Auth | null>>;
   login: (user: Auth) => void;
   logout: () => void;
 }
@@ -66,7 +67,7 @@ export function AuthProvider({ children }: ContextProviderProps) {
     }
   }, [auth]);
 
-  const memo = useMemo(() => ({ auth, login, logout }), [auth, login, logout]);
+  const memo = useMemo(() => ({ auth, setAuth, login, logout }), [auth, setAuth, login, logout]);
 
   return <AuthContext.Provider value={memo}>{children}</AuthContext.Provider>;
 }
