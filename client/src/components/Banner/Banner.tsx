@@ -3,9 +3,20 @@ import "./banner.css";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useCoordinates } from "../../contexts/EVStationContext.tsx";
-import { useAuth } from "../../contexts/AuthContext.tsx";
+import { Auth, useAuth } from "../../contexts/AuthContext.tsx";
+import AuthApi from "../../api/AuthApi.tsx";
+import { useNavigate } from "react-router-dom";
 
 function banner() {
+
+  const { coordinatesOfCurrentStation } = useCoordinates();
+  const [available, setAvailable] = useState(false);
+
+  //Used in Useeffect => to secure fetch 
+  const { auth, logout, setAuth } = useAuth();
+  const navigate = useNavigate();
+
+
   //--- This  functions check if there is available bornes
   const countNoneAvailableBornes = useCallback(
 (available_bornesArray: boolean[], booleanType: boolean): number => {
@@ -30,10 +41,15 @@ function banner() {
 
   //--- This  functions  if there is available bornes --- END
 
-  const handleClickReservation = () => {
+  
+  const handleClickReservation = async () => {
 
     try {
-      fetch(`${import.meta.env.VITE_API_URL}/bookAborn`, {
+     
+      let response;
+
+      response = await fetch(`${import.meta.env.VITE_API_URL}/bookAborn`, 
+      {
         method: "PUT",
         headers: {
             'Authorization': `Bearer ${auth?.token}`,
@@ -42,25 +58,54 @@ function banner() {
         body: JSON.stringify({
           id_station: coordinatesOfCurrentStation?.id,
         }),
-      }).then((res) => {
-        if (res.status === 200) {
-          toast.info("Votre borne a bien été réservée ! 😊");
-        } else {
-          toast.error(
-            "Une erreur s'est produite, veuillez réessayer ou rafraîchir la page",
-          );
-        }
-
-        res.json();
       });
+
+      if(response.status == 403){
+          
+        const AuthToken : boolean | Auth = await AuthApi.tryRefreshToken();
+
+        if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken) // there is one thing to enhance here 
+        { 
+
+          sessionStorage.setItem("user", JSON.stringify(AuthToken));
+          setAuth(AuthToken);
+
+          response = await fetch(`${import.meta.env.VITE_API_URL}/bookAborn`, 
+          {
+            method: "PUT",
+            headers: {
+              'Authorization': `Bearer ${AuthToken?.token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id_station: coordinatesOfCurrentStation?.id,
+            }),
+          });
+
+        }
+        else{
+          logout();
+          navigate("/");
+          toast.error("Votre session a expirée. Merci de vous reconnecter");
+        }
+      }
+
+      if(response.status == 406 || response.status == 401){
+        logout();
+        navigate("/");
+        toast.error("Votre session a expirée. Merci de vous reconnecter");
+      }
+
+      if (response.status === 200) {
+        toast.info("Votre borne a bien été réservée ! 😊");
+      } 
+
     } catch (error) {
       console.error("Error reserving :", error);
     }
   };
 
-  const { coordinatesOfCurrentStation } = useCoordinates();
-  const { auth } = useAuth();
-  const [available, setAvailable] = useState(false);
+  
 
   useEffect(() => {
     if (coordinatesOfCurrentStation) {
