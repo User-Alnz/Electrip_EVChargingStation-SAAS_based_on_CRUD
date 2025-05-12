@@ -31,14 +31,14 @@ const provideToken : RequestHandler = async (req :changeReqForNextMiddleware, re
             lastname : req.user?.lastname,
             email : req.user?.email
 
-        } ,secretKey, { expiresIn: "1m" });
+        } ,secretKey, { expiresIn: "5m" });
 
 
         const refreshToken = jwt.sign(
         {
             email : req.user?.email
 
-        }, refreshTokenKey, { expiresIn: '1d' });
+        }, refreshTokenKey, { expiresIn: "1h" });
         
 
         res.cookie( 'jwt', refreshToken, 
@@ -98,11 +98,11 @@ const verifyToken : RequestHandler = async (req, res, next) =>
     catch(err : JWTerror | any ){
 
         if(err.name == "TokenExpiredError")
-        return next(new BadRequestError({code: 403, message: "Token expired", logging: true, 
+        return next(new BadRequestError({code: 403, message: "Token expired", logging: false, 
         context : { ["Invalid Creditentials"] : "Not Authorized" } }));
 
         else
-        return next(new BadRequestError({code: 401, message: "Invalid method auth", logging: true, 
+        return next(new BadRequestError({code: 401, message: "Invalid method auth", logging: false, 
         context : { ["Invalid Creditentials"] : "Not Authorized" } }));
 
     }
@@ -124,7 +124,7 @@ type UserInfo = {
 const verifyRefreshToken : RequestHandler = async (req, res, next) => {
 
     try{
-        
+
         if(req.cookies?.jwt)
         {
             const refreshToken= req.cookies.jwt;
@@ -136,7 +136,7 @@ const verifyRefreshToken : RequestHandler = async (req, res, next) => {
               
                     if(err || !decoded) 
                     {
-                        return (new BadRequestError({code: 406, message: "RefToken expired", logging: true, 
+                        return next(new BadRequestError({code: 406, message: "RefToken expired", logging: false, 
                         context : { ["Invalid Creditentials"] : "Unauthorized" } }));   
                     }
                     else{
@@ -146,7 +146,7 @@ const verifyRefreshToken : RequestHandler = async (req, res, next) => {
                         const RefreshUserInfo : UserInfo | false =  await LoginUserDB.verifyUserEmail(email);
                         
                         if(!RefreshUserInfo)
-                            return next(new BadRequestError({code: 406, message: "Invalid request", logging: true, 
+                            return next(new BadRequestError({code: 406, message: "Invalid request", logging: false, 
                             context : { ["Invalid Creditentials"]: "You are not the real user" } }));
                         else{
                             // Correct token we send a new access token
