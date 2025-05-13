@@ -67,8 +67,8 @@ function Nav() {
                   <Link to="/trouver_une_borne" className="linkBurger">
                     Trouver une borne
                   </Link>
-                  <Link to="/trouver_une_voiture" className="linkBurger">
-                    Trouver une voiture
+                  <Link to="/reservation" className="linkBurger">
+                      Reservation
                   </Link>
 
                   {auth ? (
@@ -104,8 +104,8 @@ function Nav() {
             <Link to="/trouver_une_borne" className="linkMapNav">
               Trouver une borne
             </Link>
-            <Link to="/trouver_une_voiture" className="linkMapNav">
-              Trouver une voiture
+            <Link to="/reservation" className="linkMapNav">
+              Reservation
             </Link>
 
             {auth ? (

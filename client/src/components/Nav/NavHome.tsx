@@ -66,8 +66,8 @@ function NavHome() {
                 <Link to="/trouver_une_borne" className="linkBurger">
                   Trouver une borne
                 </Link>
-                <Link to="/trouver_une_voiture" className="linkBurger">
-                  Trouver une voiture
+                <Link to="/reservation" className="linkBurger">
+                  Reservation
                 </Link>
 
                 {auth ? (
@@ -103,8 +103,8 @@ function NavHome() {
           {auth ? (<Link to="/trouver_une_borne" className="link">
             Trouver une borne
           </Link>) : null}
-          {auth ? ( <Link to="/trouver_une_voiture" className="link">
-            Trouver une voiture
+          {auth ? ( <Link to="/reservation" className="link">
+            Reservation
           </Link>) : null}
           {auth ? (
             <div
