@@ -11,9 +11,9 @@ import { AuthProvider } from "./contexts/AuthContext";
 
 import Account from "./pages/Account";
 import CGU from "./pages/CGU";
-import CarMap from "./pages/CarMap";
 import ChargerMap from "./pages/ChargerMap";
 import HomePage from "./pages/HomePage";
+import Reservation from "./pages/Reservation"
 
 /* ************************************************************************* */
 
@@ -32,10 +32,10 @@ const router = createBrowserRouter([
       </ProtectedRoute>)
   },
   {
-    path: "/trouver_une_voiture",
+    path: "/reservation",
     element: 
     (<ProtectedRoute>
-        <CarMap />
+        <Reservation />
       </ProtectedRoute>)
   },
   {
