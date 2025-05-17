@@ -1,0 +1,224 @@
+
+.ReservationWrapper{
+    font-family: "Nexa", Arial, Helvetica, sans-serif;
+    height: 90vh;
+}
+
+.ReservationMenu{
+    display: flex;
+    padding: 0;
+    gap: 30px;
+    margin: 40px 40px;
+    border-bottom: 1px solid #b5b5b5;
+    max-width: fit-content;
+    justify-content: flex-start;
+}
+
+.ReservationTitles{
+    font-family: "Nexa", Arial, Helvetica, sans-serif;
+    font-size: 1.75rem;
+    color: #b5b5b5;
+    line-height: 60px;
+    text-align: left;
+}
+
+
+
+.ReservationCard{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+
+.ReservationBoxStation{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 180px;
+
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 16px;
+    border-left: 4px solid #00aadc;
+    box-shadow: 0 5px 20px rgba(46, 51, 51, 0.2);
+}
+
+.ReservationBoxStation img{
+    width: 150px;
+}
+
+.ReservationBoxStationInfo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #fafaf5;
+    height: 180px;
+
+
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 16px;
+   /*border-left: 4px solid #00aadc;*/
+    box-shadow: 0 5px 20px rgba(46, 51, 51, 0.2);
+}
+
+
+
+
+.ReservationBoxTitle{
+    font-weight: 700;
+    font-size: 1.35rem;
+    color: #2e3333;
+    margin: 0;
+}
+
+.ReservationStationAdress{
+    
+}
+
+.ReservationBoxStationDetail{
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    padding: 10px 0 0 0;
+}
+
+.ReservationBoxStationDetail img{
+    width: 80px;
+}
+.ReservationBoxStationDetailTitle{
+    font-weight: 600;
+}
+
+.ReservationBoxAvaibility{ 
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.greenSpot, .redSpot {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+}
+
+
+
+
+
+
+.ReservationBoxWire{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 16px;
+   /*border-left: 4px solid #00aadc;*/
+    box-shadow: 0 5px 20px rgba(46, 51, 51, 0.2);
+}
+
+.ReservationBoxWireDetails{
+    display: flex;
+    gap: 15px;
+}
+
+.ReservationBoxWireTitle{
+    font-weight: 700;
+}
+
+.ReservationBoxWire img{
+    width: 80px;
+    height: 80px;
+}
+
+
+
+
+
+.ReservationBoxDuration{
+
+
+
+    
+    padding: 10px 15px;
+    background: white;
+    border-radius: 16px;
+    border-left: 4px solid #00aadc;
+    box-shadow: 0 5px 20px rgba(46, 51, 51, 0.2);
+    min-width: 840px;
+}
+
+.ReservationBoxDuration img{
+    width: 30px;
+}
+
+.ReservationBoxDurationTitleBox{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 25px;
+}
+
+.wrapReservationBox{
+    display: flex;
+    gap: 100px;
+    padding-bottom: 20px;
+}
+
+.WrapReservationBoxDurationInfo, .WrapReservationDuration{
+    display: flex;  
+    gap: 30px;
+}
+
+.MainWraperReservationDuration{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.displayTimeBegin, .displayTimeEnd{
+    font-family: "Anton", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    padding-left: 40px;
+}
+
+.displayTimeEnd{
+    padding-left: 64px;;
+}
+
+.ReservationBoxButton{
+    font-size: 1rem;
+    color: #fff;
+    padding: 10px 35px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(46, 51, 51, 0.2);
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #00aadc;
+
+    max-width: 240px;
+    min-width: 240px;
+    margin-top: 10px;
+}
+
+.ReservationBoxButton:nth-child(2) {
+    background-color: #00c87e;
+}
+
+
+.ReservationBoxButton:nth-child(1) {
+    background-color: red;
+}
