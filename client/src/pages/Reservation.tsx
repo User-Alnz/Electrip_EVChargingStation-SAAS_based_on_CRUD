@@ -29,46 +29,51 @@ function Reservation()
                         <img src={borne} alt="" />
                     </div>
 
-                    <div className="ReservationBoxStationInfo">
+                    <div className="WrapStationAndBox">
 
-                        <p className="ReservationBoxTitle">ABVV Volvo St Ouen l'Aumône </p>
-                        <p className="ReservationStationAdress">135 Rue de Paris 95310 Saint-Ouen-l'Aumône</p>
+                        <div className="ReservationBoxStationInfo">
 
-                        <div className="ReservationBoxStationDetail">
+                            <p className="ReservationBoxTitle">ABVV Volvo St Ouen l'Aumône </p>
+                            <p className="ReservationStationAdress">135 Rue de Paris 95310 Saint-Ouen-l'Aumône</p>
 
-                            <img src={EVStation} alt="" />
+                            <div className="ReservationBoxStationDetail">
 
-                            <div>
-                                <p className="ReservationBoxStationDetailTitle">Nombre de place</p>
-                                <p>1</p>
+                                <img src={EVStation} alt="" />
 
-                                <p className="ReservationBoxStationDetailTitle">Places encores disponibles</p>
+                                <div>
+                                    <p className="ReservationBoxStationDetailTitle">Nombre de place</p>
+                                    <p>1</p>
 
-                                <div className="ReservationBoxAvaibility"><span className="greenSpot"></span><p>1</p><span className="redSpot"></span><p>0</p></div>
+                                    <p className="ReservationBoxStationDetailTitle">Places encores disponibles</p>
+
+                                    <div className="ReservationBoxAvaibility"><span className="greenSpot"></span><p>1</p><span className="redSpot"></span><p>0</p></div>
+
+                                </div>
 
                             </div>
-
-                        </div>
-                       
-                    </div>
-
-                    <div className="ReservationBoxWire">
-
-                        <p className="ReservationBoxTitle">Prise</p>
                         
-                        <div className="ReservationBoxWireDetails" >
-                            <div>
-                                <p className="ReservationBoxWireTitle">Type de prise</p>
-                                <p>T2</p>
+                        </div>
 
-                                <p className="ReservationBoxWireTitle">Puissance Max</p>
-                                <p>20 KW</p>
+                        <div className="ReservationBoxWire">
+
+                            <p className="ReservationBoxTitle">Prise</p>
+                            
+                            <div className="ReservationBoxWireDetails" >
+                                <div>
+                                    <p className="ReservationBoxWireTitle">Type de prise</p>
+                                    <p>T2</p>
+
+                                    <p className="ReservationBoxWireTitle">Puissance Max</p>
+                                    <p>20 KW</p>
+                                </div>
+                            
+                                <img src={wire} alt="" />
+
                             </div>
-                        
-                            <img src={wire} alt="" />
-
                         </div>
+
                     </div>
+
                 </section>
 
                 <section className="ReservationCard">
