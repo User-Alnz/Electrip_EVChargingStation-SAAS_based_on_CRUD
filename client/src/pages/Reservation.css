@@ -233,9 +233,24 @@
         justify-content: center;
         gap: 10px;
     }
+
+    .ReservationBoxDuration{
+        flex: 1;
+        max-width: 580px;
+    }
+
+    .ReservationBoxStation img {
+        width: 250px;
+    }
+
+    .WrapStationAndBox{
+        padding: 0 10px 0 10px;
+        max-width: 600px;
+        align-self: center;
+    }
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 600px) {
 
     .ReservationMenu{
         margin: 20px 20px 30px 20px;
