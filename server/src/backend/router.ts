@@ -19,5 +19,8 @@ router.get("/EVstations", LoginUser.verifyToken, EVstations.Read_returnStationsA
 import bookAborne from "./Controller/Reservation/bookAborne.js";
 router.put("/bookAborn", LoginUser.verifyToken, bookAborne.Update_BookAborne);
 
+// -- display user booking
+import ShowBooking from "./Controller/ShowBooking/ShowBooking.js";
+router.get("/booking", LoginUser.verifyToken, ShowBooking.Read_userBooking);
 
 export default router;
