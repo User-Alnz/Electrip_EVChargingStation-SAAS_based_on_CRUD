@@ -12,9 +12,10 @@ const Read_userBooking : RequestHandler = async (req, res, next) => {
         const userBookingInfo = await ShowBookingModel.readUserbookingUnderway(id); 
 
         if(!userBookingInfo)
-        res.status(204).json([]);
-
+        res.status(200).json([]);        
+        else
         res.status(200).json(userBookingInfo);
+
     }
     catch(err){
         next(err);
