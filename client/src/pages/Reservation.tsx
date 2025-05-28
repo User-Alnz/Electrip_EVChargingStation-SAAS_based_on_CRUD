@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth, useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader/Loader";
+import delay from "../util/delay";
+import NoReservationUnderway from "../components/Reservation/NoReservationUnderway";
 import ReservationStationInfo from "../components/Reservation/ReservationStationInfo";
 import ReservationStationDuration from "../components/Reservation/ReservationStationDuration";
 import AuthApi from "../api/AuthApi";
@@ -26,6 +29,8 @@ type ReservationData = {
 function Reservation()
 {
     const [reservation, setReservation] = useState<ReservationData[]>([]);
+    const [isReservationLoaded, setIsReservationLoaded ] = useState<boolean>(false);
+    const LoaderSpec = { height: "200px", paddingTop: "80px" }; // to be used by <Loader/> in jsx returned
     const { auth, logout, setAuth } = useAuth();
     const navigate = useNavigate(); //use redirection
 
@@ -51,7 +56,7 @@ function Reservation()
           
             const AuthToken : boolean | Auth = await AuthApi.tryRefreshToken();
   
-            if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken) // there is one thing to enhance here 
+            if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken)
             {  
               sessionStorage.setItem("user", JSON.stringify(AuthToken));
               setAuth(AuthToken);
@@ -82,9 +87,11 @@ function Reservation()
           }
 
           data = await response.json();
-          //console.log(data[0]);
+          
+          await delay(3000); //from /util directory
+
           setReservation(data);
-         
+          setIsReservationLoaded(true);
         }
         catch(err){
             console.error("Error fetching location or data:", err);
@@ -110,10 +117,16 @@ function Reservation()
                     <h1 className="ReservationTitles">Historique</h1>
 
                 </div>
-                                
-               <ReservationStationInfo {...reservation[0]} />
-               <ReservationStationDuration {...reservation[0]}/>
 
+                {!isReservationLoaded ? (<Loader style={LoaderSpec}/>) :
+                  reservation.length < 1 ? (<NoReservationUnderway/>) :
+                  (
+                    <>
+                      <ReservationStationInfo {...reservation[0]} />
+                      <ReservationStationDuration {...reservation[0]} />
+                    </>
+                )}
+              
             </main>
         </>
     )
