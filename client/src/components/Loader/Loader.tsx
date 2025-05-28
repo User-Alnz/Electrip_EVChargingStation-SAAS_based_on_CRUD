@@ -1,9 +1,13 @@
 import "./loader.css"
 
-function Loader(){
+type LoaderProps = {
+    style?: React.CSSProperties; // style is optional
+};
+
+function Loader({style} : LoaderProps){
 
     return(
-        <section className="loaderWrapper">
+        <section className="loaderWrapper" style={style} >
             <div className="loader" ></div>
         </section>
     );
