@@ -1,13 +1,101 @@
 import Nav from "../components/Nav/Nav";
-import borne from "/Borne_recharge_illustration.png";
-import wire from "/WireStation.png"
-import EVStation from "/EVStation.png"
-import EVBooking from "/EVBooking.png"
-import "./Reservation.css"
+import "./Reservation.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Auth, useAuth } from "../contexts/AuthContext";
+import { toast } from "react-toastify";
+import ReservationStationInfo from "../components/Reservation/ReservationStationInfo";
+import ReservationStationDuration from "../components/Reservation/ReservationStationDuration";
+import AuthApi from "../api/AuthApi";
+
+
+type ReservationData = {
+    borne_id:   number, //7869,
+    start_time:  string, //2025-05-26T16:27:17.000Z,
+    end_time: string, //2025-05-26T17:27:17.000Z,
+    id_station: string, //'FRCPIE6506905',
+    n_station: string, //'station name',
+    ad_station: string, //'adress',
+    nbre_pdc: number, //1,
+    acces_recharge:  string | null,
+    accessibilite: string,//'Lun-Vend 7AM à 8PM\nSam 7AM à 12PM',
+    puiss_max: string, //'24',
+    type_prise: string, //'Combo'
+};
 
 function Reservation()
 {
+    const [reservation, setReservation] = useState<ReservationData[]>([]);
+    const { auth, logout, setAuth } = useAuth();
+    const navigate = useNavigate(); //use redirection
 
+    useEffect(() => {
+
+    const getReservation = async () => {
+            
+        try{
+            let  data;
+            let response;
+
+            response = await fetch(
+            `${import.meta.env.VITE_API_URL}/booking/`,
+            {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${auth?.token}`,
+                'Content-Type': 'application/json',
+              },
+            });
+
+          if(response.status == 403){
+          
+            const AuthToken : boolean | Auth = await AuthApi.tryRefreshToken();
+  
+            if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken) // there is one thing to enhance here 
+            {  
+              sessionStorage.setItem("user", JSON.stringify(AuthToken));
+              setAuth(AuthToken);
+  
+
+              response = await fetch(
+                `${import.meta.env.VITE_API_URL}/booking/`,
+                {
+                  method: 'GET',
+                  headers: {
+                    'Authorization': `Bearer ${AuthToken?.token}`,
+                    'Content-Type': 'application/json',
+                  },
+                });
+
+            }
+            else{
+              logout();
+              navigate("/");
+              toast.error("Votre session a expirée. Merci de vous reconnecter");
+            }  
+          }
+
+          if(response.status == 406 || response.status == 401){
+            logout();
+            navigate("/");
+            toast.error("Votre session a expirée. Merci de vous reconnecter");
+          }
+
+          data = await response.json();
+          //console.log(data[0]);
+          setReservation(data);
+         
+        }
+        catch(err){
+            console.error("Error fetching location or data:", err);
+        }
+    }
+    
+    getReservation();
+
+    },[]);
+
+  
     return(
         <>
             <nav>
@@ -22,107 +110,9 @@ function Reservation()
                     <h1 className="ReservationTitles">Historique</h1>
 
                 </div>
-                
-                <section className="ReservationCard">
-
-                    <div className="ReservationBoxStation" >
-                        <img src={borne} alt="" />
-                    </div>
-
-                    <div className="WrapStationAndBox">
-
-                        <div className="ReservationBoxStationInfo">
-
-                            <p className="ReservationBoxTitle">ABVV Volvo St Ouen l'Aumône </p>
-                            <p className="ReservationStationAdress">135 Rue de Paris 95310 Saint-Ouen-l'Aumône</p>
-
-                            <div className="ReservationBoxStationDetail">
-
-                                <img src={EVStation} alt="" />
-
-                                <div>
-                                    <p className="ReservationBoxStationDetailTitle">Nombre de place</p>
-                                    <p>1</p>
-
-                                    <p className="ReservationBoxStationDetailTitle">Places encores disponibles</p>
-
-                                    <div className="ReservationBoxAvaibility"><span className="greenSpot"></span><p>1</p><span className="redSpot"></span><p>0</p></div>
-
-                                </div>
-
-                            </div>
-                        
-                        </div>
-
-                        <div className="ReservationBoxWire">
-
-                            <p className="ReservationBoxTitle">Prise</p>
-                            
-                            <div className="ReservationBoxWireDetails" >
-                                <div>
-                                    <p className="ReservationBoxWireTitle">Type de prise</p>
-                                    <p>T2</p>
-
-                                    <p className="ReservationBoxWireTitle">Puissance Max</p>
-                                    <p>20 KW</p>
-                                </div>
-                            
-                                <img src={wire} alt="" />
-
-                            </div>
-                        </div>
-
-                    </div>
-
-                </section>
-
-                <section className="ReservationCard">
-
-                    <div className="ReservationBoxDuration">
-                        
-                        <div className="ReservationBoxDurationTitleBox">
-                            <img src={EVBooking} alt="" />
-                            <p className="ReservationBoxTitle">Ma reservation</p>
-                        </div>
-
-                        <div></div>
-
-                        <div className="wrapReservationBox">
-
-                            <div className="WrapReservationBoxDurationInfo">   
-
-                                <div className="MainWraperReservationDuration">
-
-                                    <div className="WrapReservationDuration">
-                                        <p>Debut :</p> 
-                                        <p className="displayTimeBegin">16 : 07</p>
-                                    </div>
-
-                                    <div className="WrapReservationDuration">
-                                        <p>Fin :</p>  <p className="displayTimeEnd">17 : 07</p>
-                                    </div>
-                                    
-                                </div>
-
-                                <div className="MainWraperReservationDuration">
-                                    <div className="WrapReservationDuration">
-                                        <p>Restant :</p> <p className="displayTimeEnd">30 min</p>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div>
-                                <button className="ReservationBoxButton">Annuler ma reservation</button>
-                                <button className="ReservationBoxButton">Brancher ma voiture</button>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </section>
-                
-                
+                                
+               <ReservationStationInfo {...reservation[0]} />
+               <ReservationStationDuration {...reservation[0]}/>
 
             </main>
         </>
