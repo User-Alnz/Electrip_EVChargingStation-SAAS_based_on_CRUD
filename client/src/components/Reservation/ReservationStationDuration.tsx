@@ -1,4 +1,5 @@
 import EVBooking from "/EVBooking.png";
+import ReservationDisplayProgressionBar from "./ReservationDisplayProgressionBar";
 
 type ReservationData = {
     borne_id:   number, //7869,
@@ -26,7 +27,7 @@ function transformIsoTo24HoursFormat(dateIsoFormat:string) : string
     return hoursFormat.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-function OutputRemainingTimeReservation( end_time_dateIsoFormat : string)
+function OutputRemainingTimeReservation( end_time_dateIsoFormat : string) : string
 {
     let delta; 
 
@@ -38,7 +39,9 @@ function OutputRemainingTimeReservation( end_time_dateIsoFormat : string)
     delta = delta % 60; //find out remaning time out of one hour
 
     return `${delta} min`;
-}   
+}
+
+
 
 function ReservationStationDuration(reservationProps : ReservationData)
 {
@@ -55,13 +58,12 @@ function ReservationStationDuration(reservationProps : ReservationData)
                     <p className="ReservationBoxTitle">Ma reservation</p>
                 </div>
 
-                <div></div>
+                <ReservationDisplayProgressionBar end_time = {reservationProps.end_time}/>
 
                 <div className="wrapReservationBox">
 
                     <div className="WrapReservationBoxDurationInfo">   
 
-                        <div><div></div></div>
                         <div className="MainWraperReservationDuration">
 
                             <div className="WrapReservationDuration">
