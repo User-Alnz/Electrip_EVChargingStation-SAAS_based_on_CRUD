@@ -1,0 +1,13 @@
+.WrapperReservationProgressionBar{
+    width: 50%;
+    height: 8px;
+    border-radius: 13px;
+    background-color: #b5b5b5;
+}
+
+.ReservationProgressionBar{
+    height: 8px;
+    border-radius: 13px;
+    background-color: #00aadc;
+}
+
