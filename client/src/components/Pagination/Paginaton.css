@@ -1,0 +1,8 @@
+.PaginationOptionsList{
+    display: flex;
+    gap: 10px
+}
+
+.unstyled-button {
+    all: unset; /* Removes all default styles */
+}

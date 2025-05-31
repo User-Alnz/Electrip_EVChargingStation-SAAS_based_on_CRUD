@@ -19,8 +19,7 @@ type ReservationData = {
 function ReservationStationInfo(reservationProps : ReservationData)
 {
     return(
-        <>
-        {reservationProps ? (
+                
         <section className="ReservationCard">
 
                     <div className="ReservationBoxStation" >
@@ -73,9 +72,6 @@ function ReservationStationInfo(reservationProps : ReservationData)
                     </div>
 
                 </section>
-          ) : ( <p>Aucune réservation en cours</p>)}</>
-
-
     );
 
 }
