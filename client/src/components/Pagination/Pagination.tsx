@@ -1,6 +1,23 @@
 import { useState } from "react";
 import "./Paginaton.css";
 
+type Option = "increment" | "decrement";
+
+const controlPaginationFlow = ( resultLength : number, currentPage : number, setCurrentPage : React.Dispatch<React.SetStateAction<currentPage>>, paginationOption : Option ) : void => 
+{
+    if(paginationOption === "increment")
+    {
+        if(currentPage < resultLength)
+        setCurrentPage(currentPage+1);
+    }
+
+    if(paginationOption === "decrement")
+    {
+        if(currentPage > 1)
+        setCurrentPage(currentPage-1);
+    }
+}
+
 const generatePagination = ( resultLength : number ) : number[] => 
 {
     let array = [];
@@ -15,7 +32,7 @@ const generatePagination = ( resultLength : number ) : number[] =>
     return array;
 }
 
-const ReduceArray = (resultArray : number[], currentPage : number) : number[] => 
+const ReduceArray = ( resultArray : number[], currentPage : number) : number[] => 
 {   
     let startFrom = currentPage-3;
     let stopFrom = currentPage +2;
@@ -32,7 +49,7 @@ const ReduceArray = (resultArray : number[], currentPage : number) : number[] =>
 }
 
 
-function handleListingLogic(resultLength : number, currentPage : number, setCurrentPage : React.Dispatch<React.SetStateAction<currentPage>>) : JSX.Element
+function handleListingLogic( resultLength : number, currentPage : number, setCurrentPage : React.Dispatch<React.SetStateAction<currentPage>>) : JSX.Element
 {
     
     const resultArray = generatePagination(resultLength);
@@ -49,16 +66,14 @@ function handleListingLogic(resultLength : number, currentPage : number, setCurr
 
                     <button 
                         onClick={() => setCurrentPage(item)}
-                        className={`.unstyled-button ${
-                        currentPage === 1 ? "bg-blue-500 text-white" : "bg-white"
-                        }`}>
+                        className={`unstyled-button ${currentPage === item ? "active-page" : ""}`}>
                         {item}
                     </button>
                 
                 </li>
             );
         })}
-    </> 
+    </>
     );
 
 }
@@ -71,12 +86,23 @@ function Pagination()
     const resultLength = 10;
     
     return(
-        <div>
-            <button>Perv</button>
-                <ul className="">
+
+        <div className="PaginationContainer">
+
+            <button className="PaginationMouvebutton" 
+                onClick={() => controlPaginationFlow(resultLength, currentPage, setCurrentPage, "decrement")}>
+                Prev
+            </button>
+
+                <ul className="wrapPaginationResult">
                     {handleListingLogic(resultLength, currentPage, setCurrentPage)}
                 </ul>
-            <button>Next</button>
+
+            <button className="PaginationMouvebutton" 
+                onClick={() => controlPaginationFlow(resultLength, currentPage, setCurrentPage, "increment")}>
+                Next
+            </button>
+
         </div>
     );
 }
