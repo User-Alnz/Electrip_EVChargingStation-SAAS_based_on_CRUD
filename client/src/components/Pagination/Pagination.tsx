@@ -1,9 +1,8 @@
-import { useState } from "react";
 import "./Paginaton.css";
 
 type Option = "increment" | "decrement";
 
-const controlPaginationFlow = ( resultLength : number, currentPage : number, setCurrentPage : React.Dispatch<React.SetStateAction<currentPage>>, paginationOption : Option ) : void => 
+const controlPaginationFlow = ( resultLength : number, currentPage : number, setCurrentPage : React.Dispatch<React.SetStateAction<number>>, paginationOption : Option ) : void => 
 {
     if(paginationOption === "increment")
     {
@@ -49,7 +48,7 @@ const ReduceArray = ( resultArray : number[], currentPage : number) : number[] =
 }
 
 
-function handleListingLogic( resultLength : number, currentPage : number, setCurrentPage : React.Dispatch<React.SetStateAction<currentPage>>) : JSX.Element
+function handleListingLogic( resultLength : number, currentPage : number, setCurrentPage : React.Dispatch<React.SetStateAction<number>>) : JSX.Element
 {
     
     const resultArray = generatePagination(resultLength);
@@ -78,12 +77,14 @@ function handleListingLogic( resultLength : number, currentPage : number, setCur
 
 }
 
-type currentPage = number;
-
-function Pagination()
+type PaginationProps = {
+    resultLength: number;
+    currentPage: number;
+    setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  };
+  
+function Pagination({ resultLength, currentPage, setCurrentPage }: PaginationProps) 
 {
-    const [ currentPage, setCurrentPage ] = useState<currentPage>(1);
-    const resultLength = 10;
     
     return(
 
