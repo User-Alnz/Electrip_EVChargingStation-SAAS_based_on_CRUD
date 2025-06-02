@@ -1,5 +1,5 @@
 import EVBooking from "/EVBooking.png";
-import ReservationDisplayProgressionBar from "./ReservationDisplayProgressionBar";
+import ReservationDisplayProgressionBar from "../ReservationProgressionBar/ReservationDisplayProgressionBar";
 
 type ReservationData = {
     borne_id:   number, //7869,
