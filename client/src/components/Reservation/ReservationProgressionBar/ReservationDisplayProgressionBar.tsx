@@ -19,7 +19,7 @@ function diplayProgression(end_time :string) : JSX.Element
     return(<div className="ReservationProgressionBar" style={ { width : `${divWidth}%` } }></div>);
 }
 
-function ReservationDisplayProgressionBar({end_time} : ProgressionBarProps)
+function ReservationDisplayProgressionBar({end_time} : ProgressionBarProps) : JSX.Element
 { //endtime is isoFormat date
 
     return(
