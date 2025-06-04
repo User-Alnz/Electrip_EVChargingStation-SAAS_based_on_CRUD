@@ -123,7 +123,7 @@ function Reservation()
                 {selectedView === "ongoing" ? (
                   
                   !isReservationLoaded ? (<Loader style={LoaderSpec}/>) :
-                    reservation.length < 1 ? (<NoReservationUnderway/>) :
+                    reservation.length < 1 ? (<NoReservationUnderway MessageToDisplay="Pas de reservation en cours" />) :
                     (
                       <>
                         <ReservationStationInfo {...reservation[0]} />

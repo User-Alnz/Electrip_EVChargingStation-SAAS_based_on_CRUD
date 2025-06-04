@@ -1,12 +1,18 @@
 import NodataIcon from "/Nodata.png";
 
-function NoReservationUnderway()
+type NoReservationUnderwayProps = {
+    MessageToDisplay : string;
+}
+
+
+function NoReservationUnderway( {MessageToDisplay} : NoReservationUnderwayProps )
 {
     return(
         <>
             <div className="WrapNoDataReservation">
                 <img src={NodataIcon} alt="" />
-                <h1 className="ReservationTitles">Pas de reservation en cours</h1>
+                <h1 className="ReservationTitles">{MessageToDisplay}</h1>
+                
             </div>
         </>
     );
