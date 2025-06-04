@@ -6,9 +6,10 @@ import { Auth, useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader/Loader";
 import delay from "../util/delay";
-import NoReservationUnderway from "../components/Reservation/NoReservationUnderway";
-import ReservationStationInfo from "../components/Reservation/ReservationStationInfo";
-import ReservationStationDuration from "../components/Reservation/ReservationStationDuration";
+import NoReservationUnderway from "../components/Reservation/NoReservationReturned/NoReservationUnderway";
+import ReservationStationInfo from "../components/Reservation/ReservationUnderway/ReservationStationInfo";
+import ReservationStationDuration from "../components/Reservation/ReservationUnderway/ReservationStationDuration";
+import ReservationHistory from "../components/Reservation/ReservationHistory/ReservationHistory";
 import AuthApi from "../api/AuthApi";
 
 
@@ -30,6 +31,7 @@ function Reservation()
 {
     const [reservation, setReservation] = useState<ReservationData[]>([]);
     const [isReservationLoaded, setIsReservationLoaded ] = useState<boolean>(false);
+    const [selectedView, setSelectedView] = useState<"ongoing" | "history">("ongoing");
     const LoaderSpec = { height: "200px", paddingTop: "80px" }; // to be used by <Loader/> in jsx returned
     const { auth, logout, setAuth } = useAuth();
     const navigate = useNavigate(); //use redirection
@@ -113,20 +115,30 @@ function Reservation()
 
                 <div className="ReservationMenu">
 
-                    <h1 className="ReservationTitles">En cours</h1>
-                    <h1 className="ReservationTitles">Historique</h1>
+                    <h1 className={`ReservationTitles ${selectedView === "ongoing" ? "active" : ""}`} onClick={() => setSelectedView("ongoing")}>En cours</h1>
+                    <h1 className={`ReservationTitles ${selectedView === "history" ? "active" : ""}`} onClick={() => setSelectedView("history")}>Historique</h1>
 
                 </div>
 
-                {!isReservationLoaded ? (<Loader style={LoaderSpec}/>) :
-                  reservation.length < 1 ? (<NoReservationUnderway/>) :
-                  (
-                    <>
-                      <ReservationStationInfo {...reservation[0]} />
-                      <ReservationStationDuration {...reservation[0]} />
-                    </>
+                {selectedView === "ongoing" ? (
+                  
+                  !isReservationLoaded ? (<Loader style={LoaderSpec}/>) :
+                    reservation.length < 1 ? (<NoReservationUnderway MessageToDisplay="Pas de reservation en cours" />) :
+                    (
+                      <>
+                        <ReservationStationInfo {...reservation[0]} />
+                        <ReservationStationDuration {...reservation[0]} />
+                      </>
+                  )
+
+                ):( 
+
+                  <ReservationHistory/>
+
                 )}
-              
+
+
+
             </main>
         </>
     )

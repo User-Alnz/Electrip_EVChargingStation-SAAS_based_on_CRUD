@@ -31,6 +31,13 @@
     color: #b5b5b5;
     line-height: 60px;
     text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.ReservationTitles.active{
+    color: #2e3333;
+    border-bottom: 2px solid black;
 }
 
 .ReservationCard{
