@@ -23,4 +23,7 @@ router.put("/bookAborn", LoginUser.verifyToken, bookAborne.Update_BookAborne);
 import ShowBooking from "./Controller/ShowBooking/ShowBooking.js";
 router.get("/booking", LoginUser.verifyToken, ShowBooking.Read_userBooking);
 
+import ReservationHistory from "./Controller/ReservationHistory/ReservationHistory.js"
+router.get("/bookingHistory", LoginUser.verifyToken ,ReservationHistory.Read_userBookingHistory);
+
 export default router;
