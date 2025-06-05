@@ -8,7 +8,7 @@ import RegisterUser from "./Controller/Authentification/RegisterUser.js";
 import LoginUser from "./Controller/Authentification/LoginUser.js";
 
 router.post("/register", HandlePassword.hashPassword, RegisterUser.saveInDB);
-router.post("/login", HandlePassword.passwordVerify,  LoginUser.provideToken);
+router.post("/login", HandlePassword.passwordVerify, LoginUser.provideToken);
 router.get("/api", LoginUser.verifyRefreshToken);
 
 // -- get all station around user
@@ -25,10 +25,10 @@ router.get("/booking", LoginUser.verifyToken, ShowBooking.Read_userBooking);
 
 // -- return booking history
 import ReservationHistory from "./Controller/ReservationHistory/ReservationHistory.js"
-router.get("/bookingHistory", LoginUser.verifyToken ,ReservationHistory.Read_userBookingHistory);
+router.get("/bookingHistory", LoginUser.verifyToken, ReservationHistory.Read_userBookingHistory);
 
 //-- Update userBooking
-import CancelBooking from "./Controller/CancelBooking/CancelBooking.js";
-router.put("/updateBooking", LoginUser.verifyToken, CancelBooking.Update_userBooking);
+import userBooking from "./Controller/UpdateBooking/UpdateBooking.js";
+router.put("/updateBooking", LoginUser.verifyToken, userBooking.Update_Booking);
 
 export default router;
