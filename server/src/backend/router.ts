@@ -19,11 +19,16 @@ router.get("/EVstations", LoginUser.verifyToken, EVstations.Read_returnStationsA
 import bookAborne from "./Controller/Reservation/bookAborne.js";
 router.put("/bookAborn", LoginUser.verifyToken, bookAborne.Update_BookAborne);
 
-// -- display user booking
+// -- return current user booking
 import ShowBooking from "./Controller/ShowBooking/ShowBooking.js";
 router.get("/booking", LoginUser.verifyToken, ShowBooking.Read_userBooking);
 
+// -- return booking history
 import ReservationHistory from "./Controller/ReservationHistory/ReservationHistory.js"
 router.get("/bookingHistory", LoginUser.verifyToken ,ReservationHistory.Read_userBookingHistory);
+
+//-- Update userBooking
+import CancelBooking from "./Controller/CancelBooking/CancelBooking.js";
+router.put("/updateBooking", LoginUser.verifyToken, CancelBooking.Update_userBooking);
 
 export default router;
