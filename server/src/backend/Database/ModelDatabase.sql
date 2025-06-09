@@ -35,8 +35,9 @@ CREATE TABLE reservation (
   borne_id INT NOT NULL,
   user_id INT NOT NULL,
   start_time DATETIME NOT NULL,
+  start_using DATETIME NULL,
   end_time DATETIME NOT NULL,
-  status ENUM('active', 'reserved', 'cancelled'),
+  status ENUM('reserved', 'used', 'cancelled'),
 
   CONSTRAINT fk_bornes FOREIGN KEY (borne_id) REFERENCES bornes(id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE ON UPDATE CASCADE
