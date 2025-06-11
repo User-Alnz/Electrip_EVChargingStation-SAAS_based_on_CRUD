@@ -17,10 +17,10 @@ class CancelBooking {
 
     async updateReservationStatus( user_id : number ,reservation_id : number, status : string): Promise<0|1> {
 
-        if(status === "cancelled" || status === "used")
+        if(status === "cancelled")
         {
             const [result] = await SQL.query<QueryResult>(
-                "UPDATE reservation SET status = ? WHERE id = ? AND user_id=? AND status IS NULL;",
+                "UPDATE reservation SET status = ? WHERE id = ? AND user_id=? AND status NOT IN ('used', 'cancelled')",
                 [status, reservation_id, user_id]
             );
 
@@ -29,6 +29,21 @@ class CancelBooking {
                 => Solution is to parse result.info to check if "Changed" is 0 || 1
                 ResultSetHeader.d.ts
             */
+
+            const isReservationUpdated = result.info.includes(" Changed: 1 ");
+
+            if(isReservationUpdated)
+            return 1;
+            else
+            return 0;
+        }
+
+        if(status === "used")
+        {
+            const [result] = await SQL.query<QueryResult>(
+                "UPDATE reservation SET status = ?, start_using = NOW() WHERE id = ? AND user_id=? AND status NOT IN ('used', 'cancelled')",
+                [status, reservation_id, user_id]
+            );
 
             const isReservationUpdated = result.info.includes(" Changed: 1 ");
 

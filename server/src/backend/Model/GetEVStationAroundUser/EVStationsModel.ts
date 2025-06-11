@@ -70,7 +70,7 @@ class EVStationsModel {
 
         //This Join station, bornes, reservation tables on FK and check if available based on start_time and end_time to tell if borne is available| return in json dynamic entry available_bornes[boolean]; 
         const [rows] = await SQL.query<RowsResult>(
-          "SELECT s.*, JSON_ARRAYAGG(b.id) AS id_bornes, JSON_ARRAYAGG(CASE WHEN EXISTS (SELECT 1 FROM reservation r WHERE r.borne_id = b.id AND NOW() BETWEEN r.start_time AND r.end_time) THEN 0 ELSE 1 END) AS available_bornes FROM station s JOIN bornes b ON s.id = b.station_id WHERE ylatitude BETWEEN ? AND ? AND xlongitude BETWEEN ? AND ? GROUP BY s.id ORDER BY s.id ASC LIMIT 50;",
+          "SELECT s.*, JSON_ARRAYAGG(b.id) AS id_bornes, JSON_ARRAYAGG(CASE WHEN EXISTS (SELECT 1 FROM reservation r WHERE r.borne_id = b.id AND NOW() BETWEEN r.start_time AND r.end_time AND (r.status IS NOT NULL AND r.status != 'cancelled')) THEN 0 ELSE 1 END) AS available_bornes FROM station s JOIN bornes b ON s.id = b.station_id WHERE ylatitude BETWEEN ? AND ? AND xlongitude BETWEEN ? AND ? GROUP BY s.id ORDER BY s.id ASC LIMIT 50",
           [
             querryCoords.LatitudeSouth,
             querryCoords.LatitudeNorth,

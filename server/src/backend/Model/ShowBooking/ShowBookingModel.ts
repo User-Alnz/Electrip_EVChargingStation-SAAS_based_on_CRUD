@@ -23,7 +23,7 @@ class ShowBookingModel{
     async readUserbookingUnderway( userId : number ){
 
         const [displayReservation] = await SQL.query<RowsResult>(
-            "SELECT r.id, r.borne_id, r.start_time, r.end_time, s.id_station, s.n_station, s.ad_station, s.nbre_pdc, s.acces_recharge, s.accessibilite, s.puiss_max, s.type_prise FROM reservation r JOIN bornes b ON r.borne_id = b.id JOIN station s ON b.station_id = s.id WHERE NOW() BETWEEN r.start_time AND r.end_time AND r.user_id = ?",
+            "SELECT r.id, r.borne_id, r.start_time, r.end_time, s.id_station, s.n_station, s.ad_station, s.nbre_pdc, s.acces_recharge, s.accessibilite, s.puiss_max, s.type_prise FROM reservation r JOIN bornes b ON r.borne_id = b.id JOIN station s ON b.station_id = s.id WHERE NOW() BETWEEN r.start_time AND r.end_time AND r.user_id = ? AND (r.status IS NULL OR r.status != 'cancelled');",
             [userId]
         );
 

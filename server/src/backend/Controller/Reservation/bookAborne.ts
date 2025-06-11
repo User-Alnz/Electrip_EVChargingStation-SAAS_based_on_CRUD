@@ -10,11 +10,22 @@ const Update_BookAborne: RequestHandler = async (req, res, next) => {
     
     const updated = await bookAborneModel.update(id_station, id); //update(id_station : number, user_id : number) 
  
-    if (updated === 1) {
-      res.status(200).json({ msg: "modification bien effectué" });
-    } else {
-      return next(new BadRequestError({code: 400, message: "Invalid parameter", logging: true, context : { ["Error update"]: "Error while reserving borne." } }));
+    if (updated === 1){
+      res.status(200).json({ msg: "Modification bien effectué" });
+      return;
     }
+    
+    if(updated === -1){
+      res.status(409).json({ msg: "Toutes les bornes de la station sont déjà réservées."});
+      return;
+    }
+
+    if(updated === 0)
+    return next(new BadRequestError({code:422, message : "Invalid parameter", logging: false, context : { ["Cannot book"] : "User has already one reservation underway. Only one per user." } }));
+
+    else
+    return next(new BadRequestError({code: 400, message: "Invalid parameter", logging: true, context : { ["Error update"] : "Error while reserving." }}));
+
   } catch (err) {
     next(err);
   }
