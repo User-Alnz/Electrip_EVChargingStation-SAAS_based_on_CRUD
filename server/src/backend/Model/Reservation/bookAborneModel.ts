@@ -1,4 +1,3 @@
-import { type } from "os";
 import { Database, QueryResult, RowsResult } from "../../Database/DatabaseConnection.js"
 import  SQL  from "../../Database/DatabaseConnection.js"
 
@@ -39,7 +38,6 @@ type bornesResult = [{
         [user_id, borne_id_toBook, user_id]
       );
 
-      console.log(result);
   
       return result.affectedRows as updated; 
     }
