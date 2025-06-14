@@ -1,7 +1,14 @@
 import EVBooking from "/EVBooking.png";
 import ReservationDisplayProgressionBar from "../ReservationProgressionBar/ReservationDisplayProgressionBar";
+import { Auth, useAuth } from "../../../contexts/AuthContext";
+import AuthApi from "../../../api/AuthApi";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { transformIsoTo24HoursFormat, OutputRemainingTimeReservation } from "./ReservationStationToolBox";
+
 
 type ReservationData = {
+    id : number,
     borne_id:   number, //7869,
     start_time:  string, //2025-05-26T16:27:17.000Z,
     end_time: string, //2025-05-26T17:27:17.000Z,
@@ -15,36 +22,89 @@ type ReservationData = {
     type_prise: string, //'Combo'
 };
 
-function transformIsoTo24HoursFormat(dateIsoFormat:string) : string
-{
-
-    if (!dateIsoFormat)
-    return "--:--";
-
-    const hoursFormat = new Date(dateIsoFormat);
-
-    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleTimeString
-    return hoursFormat.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
-
-function OutputRemainingTimeReservation( end_time_dateIsoFormat : string) : string
-{
-    let delta; 
-
-    const start_time = new Date();
-    const end_time = new Date(end_time_dateIsoFormat);
-
-    delta = end_time.getTime() - start_time.getTime(); // delta in millisecond
-    delta = Math.floor(delta / 60000); //convet milisecond to minutes
-    delta = delta % 60; //find out remaning time out of one hour
-
-    return `${delta} min`;
-}
-
+type Option = 'cancelled'| 'used'; 
 
 
 function ReservationStationDuration(reservationProps : ReservationData)
 {
+    const { auth, logout, setAuth } = useAuth();
+    const navigate = useNavigate();
+
+        const UpdateReservation = async( action : Option) => {
+            try
+            {
+                let response;
+                
+                response = await fetch(
+                `${import.meta.env.VITE_API_URL}/updateBooking`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${auth?.token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        reservation_id : reservationProps.id,
+                        status : action 
+                    })
+                }
+                );
+
+                if(response.status == 403){
+          
+                    const AuthToken : boolean | Auth = await AuthApi.tryRefreshToken();
+          
+                    if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken) // there is one thing to enhance here 
+                    {  
+                      sessionStorage.setItem("user", JSON.stringify(AuthToken));
+                      setAuth(AuthToken);
+          
+                      response = await fetch(
+                        `${import.meta.env.VITE_API_URL}/updateBooking`,
+                        {
+                          method: 'PUT',
+                          headers: {
+                            'Authorization': `Bearer ${AuthToken?.token}`,
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            reservation_id : reservationProps.id,
+                            status : action 
+                        })
+
+                      });
+                    }
+                    else{
+                      logout();
+                      navigate("/");
+                      toast.error("Votre session a expirée. Merci de vous reconnecter");
+                    }
+                }
+
+                if(response.status == 406 || response.status == 401){
+                    logout();
+                    navigate("/");
+                    toast.error("Votre session a expirée. Merci de vous reconnecter");
+                }
+
+                if(action === "cancelled" && response.ok)
+                toast.success("Votre reservation a été annulée avec succès.");
+                else if(action === "cancelled" && !response.ok)
+                toast.error("impossible d'annuler votre reservation");
+
+                if(action === "used" && response.ok)
+                toast.success("Vous pouvez brancher votre voiture.");
+                else if(action === "used" && !response.ok)
+                toast.error("Une erreur est survenue");
+
+
+            }
+            catch(err)
+            {
+                console.error("Error fetching location or data:", err);
+            }
+        }
+
 
     return(
         <>
@@ -86,8 +146,8 @@ function ReservationStationDuration(reservationProps : ReservationData)
                     </div>
 
                     <div>
-                        <button className="ReservationBoxButton">Annuler ma reservation</button>
-                        <button className="ReservationBoxButton">Brancher ma voiture</button>
+                        <button className="ReservationBoxButton" onClick={() => {UpdateReservation('cancelled')}}>Annuler ma reservation</button>
+                        <button className="ReservationBoxButton" onClick={() => {UpdateReservation('used')}}> Brancher ma voiture</button>
                     </div>
 
                 </div>

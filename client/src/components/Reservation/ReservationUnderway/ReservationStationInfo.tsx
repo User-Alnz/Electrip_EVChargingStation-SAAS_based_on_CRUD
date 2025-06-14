@@ -3,6 +3,7 @@ import wire from "/WireStation.png";
 import EVStation from "/EVStation.png";
 
 type ReservationData = {
+    id : number,
     borne_id:   number, //7869,
     start_time:  string, //2025-05-26T16:27:17.000Z,
     end_time: string, //2025-05-26T17:27:17.000Z,
