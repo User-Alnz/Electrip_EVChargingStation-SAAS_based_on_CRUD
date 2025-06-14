@@ -96,9 +96,16 @@ function banner() {
         toast.error("Votre session a expirée. Merci de vous reconnecter");
       }
 
-      if (response.status === 200) {
-        toast.info("Votre borne a bien été réservée ! 😊");
-      } 
+      if (response.status === 200)
+        toast.success("Votre borne a bien été réservée ! 😊");
+
+      if(response.status === 409)
+        toast.error("Toutes les bornes de la station sont déjà réservées.");
+      
+      if(response.status === 422)
+        toast.warn("Vous avez déjà une reservation en cours");
+
+        
 
     } catch (error) {
       console.error("Error reserving :", error);
