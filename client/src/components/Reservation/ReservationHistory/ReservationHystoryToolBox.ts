@@ -21,4 +21,28 @@ function transformIsoToUIRequiredFormat(dateIsoFormat:string) : string
     return  newDateFormat;
 }
 
-export default transformIsoToUIRequiredFormat;
+function interpretReservationStatus( status: "used" | "cancelled" | "reserved" ) : string
+{
+    if(status === "used")
+    return "Utilisé";
+
+    if(status === "reserved")
+    return "Reservé";
+
+    if(status === "cancelled")
+    return "Annulé";
+
+    return "N/A";
+}
+
+function defineBorderBoxStyle( status: "used" | "cancelled" | "reserved" ) : React.CSSProperties
+{
+    if(status === "used")
+    return  { borderLeft: "4px solid green" };
+
+    if(status === "cancelled")
+    return   { borderLeft: "4px solid red" }; 
+
+    return { borderLeft: "4px solid #00aadc" };//{ border-left: "4px solid #00aadc"};
+}
+export {transformIsoToUIRequiredFormat, interpretReservationStatus, defineBorderBoxStyle};

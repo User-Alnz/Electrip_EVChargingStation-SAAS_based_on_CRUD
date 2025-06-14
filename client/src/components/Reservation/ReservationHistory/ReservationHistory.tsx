@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Auth, useAuth } from "../../../contexts/AuthContext";
 import AuthApi from "../../../api/AuthApi";
 import { toast } from "react-toastify";
-import transformIsoToUIRequiredFormat  from "./ReservationHystoryToolBox";
+import {transformIsoToUIRequiredFormat, interpretReservationStatus, defineBorderBoxStyle}  from "./ReservationHystoryToolBox";
 
 
 interface bookingHistoryObject {
@@ -19,7 +19,7 @@ interface bookingHistoryObject {
         user_id: number,
         start_time: string,
         end_time: string,
-        status: null,
+        status: "used" | "cancelled" | "reserved",
         n_station : string,
         ad_station : string
     }[];
@@ -57,7 +57,7 @@ function ReservationHistory()
           
                     const AuthToken : boolean | Auth = await AuthApi.tryRefreshToken();
           
-                    if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken) // there is one thing to enhance here 
+                    if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken) 
                     {  
                       sessionStorage.setItem("user", JSON.stringify(AuthToken));
                       setAuth(AuthToken);
@@ -111,9 +111,9 @@ function ReservationHistory()
 
                 userBookingHistory?.result?.map((item, index)=> (
 
-                    <div key={index} className="StationHistoryCard">
+                    <div key={index} className="StationHistoryCard" style={defineBorderBoxStyle(item.status)}>
                         
-                        <h1>status : {item.status}</h1>
+                        <h1>statut : {interpretReservationStatus(item.status)}</h1>
                         
                         <div className="HistoryCardStationInfo">
 
