@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Auth, useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader/Loader";
-import delay from "../util/delay";
+import {delay} from "../util/GenerateDelay";
 import NoReservationUnderway from "../components/Reservation/NoReservationReturned/NoReservationUnderway";
 import ReservationStationInfo from "../components/Reservation/ReservationUnderway/ReservationStationInfo";
 import ReservationStationDuration from "../components/Reservation/ReservationUnderway/ReservationStationDuration";
@@ -16,7 +16,9 @@ import AuthApi from "../api/AuthApi";
 type ReservationData = {
     id : number,
     borne_id:   number, //7869,
+    status : "used" | "cancelled" | "reserved",
     start_time:  string, //2025-05-26T16:27:17.000Z,
+    start_using: string | null, //  2025-06-16T08:47:31.000Z, | null 
     end_time: string, //2025-05-26T17:27:17.000Z,
     id_station: string, //'FRCPIE6506905',
     n_station: string, //'station name',
