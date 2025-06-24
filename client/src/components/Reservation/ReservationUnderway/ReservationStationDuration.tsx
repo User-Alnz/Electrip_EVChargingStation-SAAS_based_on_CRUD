@@ -5,12 +5,15 @@ import AuthApi from "../../../api/AuthApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { transformIsoTo24HoursFormat, OutputRemainingTimeReservation } from "./ReservationStationToolBox";
+import ChargingAnimation from "../ReservationAnimation/ReservationAnimation"
 
 
 type ReservationData = {
     id : number,
     borne_id:   number, //7869,
+    status : "used" | "cancelled" | "reserved",
     start_time:  string, //2025-05-26T16:27:17.000Z,
+    start_using: string | null, //  2025-06-16T08:47:31.000Z, | null,
     end_time: string, //2025-05-26T17:27:17.000Z,
     id_station: string, //'FRCPIE6506905',
     n_station: string, //'station name',
@@ -144,11 +147,15 @@ function ReservationStationDuration(reservationProps : ReservationData)
                         </div>
 
                     </div>
-
-                    <div>
-                        <button className="ReservationBoxButton" onClick={() => {UpdateReservation('cancelled')}}>Annuler ma reservation</button>
-                        <button className="ReservationBoxButton" onClick={() => {UpdateReservation('used')}}> Brancher ma voiture</button>
-                    </div>
+                    {reservationProps.status === "used" ?  
+                    (
+                        <ChargingAnimation reservation={reservationProps} />
+                    ):(
+                        <div>                        
+                            <button className="ReservationBoxButton" onClick={() => {UpdateReservation('cancelled')}}>Annuler ma reservation</button>
+                            <button className="ReservationBoxButton" onClick={() => {UpdateReservation('used')}}> Brancher ma voiture</button>
+                        </div>
+                    )}
 
                 </div>
             </div>

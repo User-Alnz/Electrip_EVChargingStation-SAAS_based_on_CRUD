@@ -5,7 +5,9 @@ import EVStation from "/EVStation.png";
 type ReservationData = {
     id : number,
     borne_id:   number, //7869,
+    status : "used" | "cancelled" | "reserved",
     start_time:  string, //2025-05-26T16:27:17.000Z,
+    start_using: string | null, //  2025-06-16T08:47:31.000Z, | null 
     end_time: string, //2025-05-26T17:27:17.000Z,
     id_station: string, //'FRCPIE6506905',
     n_station: string, //'station name',
