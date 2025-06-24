@@ -6,7 +6,9 @@ import  SQL  from "../../Database/DatabaseConnection.js"
 type ReservationData =[{
     id : number,
     borne_id:   number, //7869,
+    status : "used" | "cancelled" | "reserved",
     start_time:  string, //2025-05-26T16:27:17.000Z,
+    start_using: string | null, //  2025-06-16T08:47:31.000Z, | null 
     end_time: string, //2025-05-26T17:27:17.000Z,
     id_station: string, //'FRCPIE6506905',
     n_station: string, //'station name',
@@ -23,7 +25,7 @@ class ShowBookingModel{
     async readUserbookingUnderway( userId : number ){
 
         const [displayReservation] = await SQL.query<RowsResult>(
-            "SELECT r.id, r.borne_id, r.start_time, r.end_time, s.id_station, s.n_station, s.ad_station, s.nbre_pdc, s.acces_recharge, s.accessibilite, s.puiss_max, s.type_prise FROM reservation r JOIN bornes b ON r.borne_id = b.id JOIN station s ON b.station_id = s.id WHERE NOW() BETWEEN r.start_time AND r.end_time AND r.user_id = ? AND (r.status IS NULL OR r.status != 'cancelled');",
+            "SELECT r.id, r.borne_id, r.status, r.start_time, r.start_using, r.end_time, s.id_station, s.n_station, s.ad_station, s.nbre_pdc, s.acces_recharge, s.accessibilite, s.puiss_max, s.type_prise FROM reservation r JOIN bornes b ON r.borne_id = b.id JOIN station s ON b.station_id = s.id WHERE NOW() BETWEEN r.start_time AND r.end_time AND r.user_id = ? AND (r.status IS NULL OR r.status != 'cancelled');",
             [userId]
         );
 
