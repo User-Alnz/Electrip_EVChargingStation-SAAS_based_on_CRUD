@@ -121,32 +121,37 @@ function ReservationStationDuration(reservationProps : ReservationData)
                     <p className="ReservationBoxTitle">Ma reservation</p>
                 </div>
 
-                <ReservationDisplayProgressionBar end_time = {reservationProps.end_time}/>
 
-                <div className="wrapReservationBox">
 
-                    <div className="WrapReservationBoxDurationInfo">   
+                <div className="wrapReservationBox"  style={{ flexDirection: reservationProps.status === "used" ? 'column' : 'row'}}>
 
-                        <div className="MainWraperReservationDuration">
+                    <div style={{ alignSelf: reservationProps.status === "used" ? 'center' : 'null'}}>
+                        <div className="WrapReservationBoxDurationInfo">   
 
-                            <div className="WrapReservationDuration">
-                                <p>Debut :</p> 
-                                <p className="displayTimeBegin">{reservationProps?.start_time && transformIsoTo24HoursFormat(reservationProps.start_time)}</p>
+                            <div className="MainWraperReservationDuration">
+
+                                <div className="WrapReservationDuration">
+                                    <p>Debut :</p> 
+                                    <p className="displayTimeBegin">{reservationProps?.start_time && transformIsoTo24HoursFormat(reservationProps.start_time)}</p>
+                                </div>
+
+                                <div className="WrapReservationDuration">
+                                    <p>Fin :</p>  <p className="displayTimeEnd">{reservationProps?.end_time && transformIsoTo24HoursFormat(reservationProps.end_time)}</p>
+                                </div>
+                                
                             </div>
 
-                            <div className="WrapReservationDuration">
-                                <p>Fin :</p>  <p className="displayTimeEnd">{reservationProps?.end_time && transformIsoTo24HoursFormat(reservationProps.end_time)}</p>
+                            <div className="MainWraperReservationDuration">
+                                <div className="WrapReservationDuration">
+                                    <p>Restant :</p> <p className="displayTimeEnd">{reservationProps?.end_time && OutputRemainingTimeReservation(reservationProps.end_time)}</p>
+                                </div>
                             </div>
-                            
+
                         </div>
 
-                        <div className="MainWraperReservationDuration">
-                            <div className="WrapReservationDuration">
-                                <p>Restant :</p> <p className="displayTimeEnd">{reservationProps?.end_time && OutputRemainingTimeReservation(reservationProps.end_time)}</p>
-                            </div>
-                        </div>
-
+                        <ReservationDisplayProgressionBar end_time = {reservationProps.end_time}/>
                     </div>
+
                     {reservationProps.status === "used" ?  
                     (
                         <ChargingAnimation reservation={reservationProps} />
