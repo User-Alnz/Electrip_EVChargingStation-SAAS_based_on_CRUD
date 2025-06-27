@@ -137,6 +137,7 @@
 .ReservationBoxWireDetails{
     display: flex;
     gap: 15px;
+    justify-content: space-evenly;
 }
 
 .ReservationBoxWireTitle{
@@ -154,7 +155,14 @@
     border-radius: 16px;
     border-left: 4px solid #00aadc;
     box-shadow: 0 5px 20px rgba(46, 51, 51, 0.2);
-    min-width: 840px;
+    min-width: 770px;
+    margin-bottom: 30px;
+}
+/* Specific rule only for .ReservationBoxDuration */
+@media screen and (min-width: 1100px){
+    .ReservationBoxDuration{
+        min-width: 820px;
+    }
 }
 
 .ReservationBoxDuration img{
@@ -170,7 +178,7 @@
 
 .wrapReservationBox{
     display: flex;
-    gap: 100px;
+    gap: 50px;
     padding-bottom: 20px;
     justify-content: space-between;
 }
@@ -179,6 +187,11 @@
     display: flex;  
     gap: 30px;
     justify-content : space-between;
+}
+
+.WrapReservationBoxDurationInfo{
+    padding-top: 30px;
+    align-self: center;
 }
 
 .MainWraperReservationDuration{
@@ -268,9 +281,17 @@
         max-width: 600px;
         align-self: center;
     }
+
+    .ReservationBoxStationInfo, .ReservationBoxWire{
+        min-width: 270px;
+    }
 }
 
 @media screen and (max-width: 600px) {
+
+    .ReservationBoxStationInfo, .ReservationBoxWire{
+        min-width: inherit;
+    }
 
     .ReservationMenu{
         margin: 20px 20px 30px 20px;
@@ -334,7 +355,7 @@
     }
 
     .wrapReservationBox {
-        gap: 30px;
+        gap: 45px;
     }
 
     .WrapReservationDuration {

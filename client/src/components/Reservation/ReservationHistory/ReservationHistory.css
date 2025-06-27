@@ -8,7 +8,7 @@
 .StationHistoryCard{
     display: flex;
     flex-direction: column;
-    min-width: 500px;
+    width: 500px;
     background: white;
     /* border-radius: 16px; */
     border-left: 4px solid #00aadc;
@@ -53,4 +53,25 @@
 
 .HistoryCardStationDate{
     padding: 5px 0 20px 20px;
+}
+
+
+@media screen and (min-width : 1500px) {
+    .StationHistoryCard{
+        width: 600px;
+    }
+}
+
+@media screen and (max-width : 550px) {
+    .StationHistoryCard{
+        font-size: x-small;
+        width: calc(100vw - 50px);
+    }
+}
+
+@media screen and (max-width : 320px) {
+    .StationHistoryCard{
+        font-size: x-small;
+        width: 280px;
+    }
 }
