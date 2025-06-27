@@ -1,11 +1,12 @@
 import Nav from "../components/Nav/Nav";
 import "./Reservation.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth, useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader/Loader";
 import {delay} from "../util/GenerateDelay";
+import {GenRerender} from "../util/TriggerRerender"
 import NoReservationUnderway from "../components/Reservation/NoReservationReturned/NoReservationUnderway";
 import ReservationStationInfo from "../components/Reservation/ReservationUnderway/ReservationStationInfo";
 import ReservationStationDuration from "../components/Reservation/ReservationUnderway/ReservationStationDuration";
@@ -32,6 +33,10 @@ type ReservationData = {
 
 function Reservation()
 {
+   // this is for handle rerendering 
+    const [triggerRerender, setTriggerRerender ] = useState<boolean>(false);
+    const  staticRerenderLogic = useRef(new GenRerender(setTriggerRerender));
+
     const [reservation, setReservation] = useState<ReservationData[]>([]);
     const [isReservationLoaded, setIsReservationLoaded ] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<"ongoing" | "history">("ongoing");
@@ -105,7 +110,7 @@ function Reservation()
     
     getReservation();
 
-    },[]);
+    },[triggerRerender]);
 
   
     return(
@@ -130,7 +135,7 @@ function Reservation()
                     (
                       <>
                         <ReservationStationInfo {...reservation[0]} />
-                        <ReservationStationDuration {...reservation[0]} />
+                        <ReservationStationDuration reservationProps={reservation[0]} rerenderer={staticRerenderLogic.current} />
                       </>
                   )
 
