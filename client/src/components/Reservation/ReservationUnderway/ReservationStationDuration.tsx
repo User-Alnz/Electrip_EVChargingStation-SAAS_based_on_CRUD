@@ -5,8 +5,15 @@ import AuthApi from "../../../api/AuthApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { transformIsoTo24HoursFormat, OutputRemainingTimeReservation } from "./ReservationStationToolBox";
+import { GenRerender } from "../../../util/TriggerRerender";
 import ChargingAnimation from "../ReservationAnimation/ReservationAnimation"
 
+
+interface ReservationStationDurationProps 
+{
+    reservationProps: ReservationData;
+    rerenderer: GenRerender<boolean>;
+}
 
 type ReservationData = {
     id : number,
@@ -28,7 +35,7 @@ type ReservationData = {
 type Option = 'cancelled'| 'used'; 
 
 
-function ReservationStationDuration(reservationProps : ReservationData)
+function ReservationStationDuration({reservationProps, rerenderer} : ReservationStationDurationProps)
 {
     const { auth, logout, setAuth } = useAuth();
     const navigate = useNavigate();
@@ -100,6 +107,9 @@ function ReservationStationDuration(reservationProps : ReservationData)
                 else if(action === "used" && !response.ok)
                 toast.error("Une erreur est survenue");
 
+                //This is responsible for rerendering parent Component to update User interface based on button action
+                // this then does launch ChargingAnimation or return Component NoReservationUnderway because reservation got cancelled
+                rerenderer.TriggerRerender();
 
             }
             catch(err)
