@@ -42,3 +42,15 @@ CREATE TABLE reservation (
   CONSTRAINT fk_bornes FOREIGN KEY (borne_id) REFERENCES bornes(id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_user_account FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE consumption (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  reservation_id INT NOT NULL,
+  cost DECIMAL(6,2) NOT NULL,
+  total_consumption DECIMAL(6,2) NOT NULL,
+  time_in_use INT NOT NULL,
+  total_distance DECIMAL(6,2) NOT NULL,
+
+  CONSTRAINT fk_reservation FOREIGN KEY (reservation_id) REFERENCES reservation(id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT unique_reservation UNIQUE (reservation_id)
+);
