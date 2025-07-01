@@ -1,4 +1,3 @@
-import { type } from "os";
 import { Database, QueryResult, RowsResult } from "../../Database/DatabaseConnection.js"
 import  SQL  from "../../Database/DatabaseConnection.js"
 
@@ -13,7 +12,7 @@ type ResultSetHeader = {
     changedRows: number //1 | 0
   }
 
-class CancelBooking { 
+class UpdateBookingStatus { 
 
     async updateReservationStatus( user_id : number ,reservation_id : number, status : string): Promise<0|1> {
 
@@ -59,4 +58,4 @@ class CancelBooking {
 
 }
 
-export default new CancelBooking();
+export default new UpdateBookingStatus();
