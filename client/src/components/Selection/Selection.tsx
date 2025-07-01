@@ -174,8 +174,8 @@ function Selection() {
               </section>
 
               <section className="time">
-                <p>Temps d'utilisation</p>
-                <b>⏱️ 1 heure</b>
+                <p>Puissance</p>
+                <b>{`${coordinatesOfCurrentStation.puiss_max} kwh`}</b>
               </section>
             </div>
           </section>

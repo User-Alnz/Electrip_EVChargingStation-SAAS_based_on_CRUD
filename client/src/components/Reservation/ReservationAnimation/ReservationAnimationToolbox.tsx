@@ -1,13 +1,12 @@
-function  returnTotal(start_using: string, puiss_max: string, option : "Kwh" | "%" | "loaded") : JSX.Element | number
+function  returnTotal(start_using: string, puiss_max: string, maxKwhCapacity : number , option : "Kwh" | "%" | "loaded") : JSX.Element | number
 {
     let consumption;
-    const maxKWh = 200;
 
     const power_Kwh = parseInt(puiss_max);
     const start = new Date(start_using);
     const TimeNow = new Date();
 
-    consumption =  Math.floor(TimeNow.getTime() - start.getTime())/6000; //Convert to mintues
+    consumption =  Math.floor(TimeNow.getTime() - start.getTime())/60000; //Convert to mintues
     consumption = (power_Kwh / 60) * consumption;
 
     if(option === "loaded")
@@ -27,7 +26,7 @@ function  returnTotal(start_using: string, puiss_max: string, option : "Kwh" | "
 
     if(option ==="%")
     {
-        consumption = (consumption/maxKWh)*100;
+        consumption = (consumption/maxKwhCapacity)*100;
         consumption = Math.round(consumption);
 
         if(consumption > 100)
@@ -80,7 +79,7 @@ function TotalCost(start_using : string, KwhPrice : number, puiss_max: string) :
     const start = new Date(start_using);
     const TimeNow = new Date();
 
-    consumption =  Math.floor(TimeNow.getTime() - start.getTime())/6000; //Convert to mintues
+    consumption =  Math.floor(TimeNow.getTime() - start.getTime())/60000; //Convert to mintues
     consumption = (power_Kwh / 60) * consumption;
     consumption = Number(consumption.toFixed(2));
     consumption = Number((consumption * KwhPrice).toFixed(2));
@@ -88,10 +87,19 @@ function TotalCost(start_using : string, KwhPrice : number, puiss_max: string) :
     return (<p>{`${consumption}`}€</p>);
 }
 
-function WorkoutDistance( KwhConsumption : number) : JSX.Element
+function WorkoutDistance(start_using : string, KwhConsumption : number) : JSX.Element
 {
+    let consumption;
     const averageConsumption = 100/15; //100 km / 15 kWh = 6.67 km/kwh
-    const distance = Number((averageConsumption * KwhConsumption).toFixed(2));
+    const start = new Date(start_using).getTime();
+    const end = new Date().getTime();
+
+    const delta = end - start;
+    const ratioToOneHour =  delta / (1000 * 60 * 60);
+    consumption = KwhConsumption * ratioToOneHour;
+    consumption = Number(consumption.toFixed(2));
+
+    const distance = Number((averageConsumption * consumption).toFixed(2));
 
     return (<p>{`+ ${distance}km `}</p>);
 }
@@ -108,19 +116,18 @@ function timeInCharge(start_using:string) : JSX.Element
     return(<p>{`${timeInUse}`} min</p>)
 }
 
-function batteryAnimation(start_using: string, puiss_max: string) : JSX.Element
+function batteryAnimation(start_using: string, puiss_max: string, maxKwhCapacity : number) : JSX.Element
 {
     let consumptionPercentage;
     let fromThisPercentage;
-    const maxKWh = 200;
 
     const power_Kwh = parseInt(puiss_max);
     const start = new Date(start_using);
     const TimeNow = new Date();
 
-    consumptionPercentage =  Math.floor(TimeNow.getTime() - start.getTime())/6000; //Convert to mintues
+    consumptionPercentage =  Math.floor(TimeNow.getTime() - start.getTime())/60000; //Convert to mintues
     consumptionPercentage = (power_Kwh / 60) * consumptionPercentage;
-    consumptionPercentage = (consumptionPercentage/maxKWh)*100;
+    consumptionPercentage = (consumptionPercentage/maxKwhCapacity)*100;
     consumptionPercentage = Number(consumptionPercentage.toFixed(2));
 
     fromThisPercentage = consumptionPercentage - 5;

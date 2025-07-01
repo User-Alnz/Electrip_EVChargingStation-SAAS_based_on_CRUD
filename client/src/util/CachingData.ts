@@ -4,9 +4,15 @@ function setDataInCache(key: string, value: number, expiryTime: number) : void
     localStorage.setItem(key, JSON.stringify(item));
 }
 
-function getDataInCache(key: string) : number | null 
+function setDataInCacheAsObject(key: string, value : Object, expiryTime: number): void
 {
-    const itemOject = localStorage.getItem(key); // ex => {"value":0.28,"expiry":1750153632000}
+    const item = { value, expiry: expiryTime };
+    localStorage.setItem(key, JSON.stringify(item));
+}
+
+function getDataInCache(key: string) : any
+{
+    const itemOject = localStorage.getItem(key); // ex => {"value":0.28,"expiry":1750153632000} | value : {totalCost: 150.13, totalKWw: 417.02, totalTimeInCharge: 104, totalDistance: 6.67}
     if (!itemOject) return null;
   
     const item = JSON.parse(itemOject);
@@ -18,4 +24,4 @@ function getDataInCache(key: string) : number | null
     return item.value;
 }
 
-export {setDataInCache, getDataInCache};
+export {setDataInCache,setDataInCacheAsObject,getDataInCache};
