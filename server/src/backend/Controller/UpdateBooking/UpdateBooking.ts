@@ -1,6 +1,6 @@
 import type { RequestHandler } from "express";
 import BadRequestError from "../../errors/badRequestErrors.js";
-import CancelBookingModel from "../../Model/UpdateBooking/UpdateBookingModel.js";
+import UpdateBookingStatus from "../../Model/UpdateBooking/UpdateBookingModel.js";
 
 const Update_Booking : RequestHandler = async (req, res, next) => {
 
@@ -8,7 +8,7 @@ const Update_Booking : RequestHandler = async (req, res, next) => {
     const { reservation_id, status } = req.body;
 
     try{
-        const isReservationUpdated = await CancelBookingModel.updateReservationStatus(id, reservation_id, status);
+        const isReservationUpdated = await UpdateBookingStatus.updateReservationStatus(id, reservation_id, status);
 
         if(isReservationUpdated)
         res.status(200).json({result : "success"});
