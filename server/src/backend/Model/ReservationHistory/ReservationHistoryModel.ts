@@ -5,16 +5,7 @@ import  SQL  from "../../Database/DatabaseConnection.js"
 interface ReservationHistoryData {
     currentPage : number;
     totalPages : number;
-    result : [{
-        id: number,
-        borne_id: number,
-        user_id: number,
-        start_time: string,
-        end_time: string,
-        status: null,
-        n_station : string,
-        ad_station : string
-    }];
+    result : result
 }
 
 type result = [{
@@ -25,7 +16,12 @@ type result = [{
     end_time: string,
     status: null,
     n_station : string,
-    ad_station : string
+    ad_station : string,
+    cost: string | null,
+    total_consumption: string | null,
+    time_in_use: number | null,
+    total_distance: string | null,
+
 }]
 
 type totalReservation = [ {totalRowsLength : number} ]; 
@@ -49,9 +45,9 @@ class ReservationHistoryModel {
         const offset = 5 * page;
         
         const [userBookingHistory] = await SQL.query<RowsResult>(
-            "SELECT r.*, s.n_station, s.ad_station FROM reservation r JOIN bornes b ON r.borne_id = b.id JOIN station s ON b.station_id = s.id WHERE r.user_id = ? ORDER BY r.start_time DESC LIMIT ? OFFSET ?;",
+            "SELECT r.*, s.n_station, s.ad_station, c.cost, c.total_consumption, c.time_in_use, c.total_distance FROM reservation r JOIN bornes b ON r.borne_id = b.id JOIN station s ON b.station_id = s.id LEFT JOIN consumption c ON c.reservation_id = r.id WHERE r.user_id = ? ORDER BY r.start_time DESC LIMIT ? OFFSET ?",
             [userId, 5, offset]);
-
+                        
         return userBookingHistory as result;
     }
 

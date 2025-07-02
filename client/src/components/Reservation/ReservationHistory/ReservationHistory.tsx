@@ -21,7 +21,11 @@ interface bookingHistoryObject {
         end_time: string,
         status: "used" | "cancelled" | "reserved",
         n_station : string,
-        ad_station : string
+        ad_station : string,
+        cost: string | null,
+        total_consumption: string | null,
+        time_in_use: number | null,
+        total_distance: string | null,
     }[];
 }
 
@@ -107,7 +111,7 @@ function ReservationHistory()
             
             <div className="WrapStationHistoryCards">
 
-            {!userBookingHistory?.result? (<NoReservationUnderway MessageToDisplay="Encore Aucune reservation" /> ) : (
+            {!userBookingHistory?.result || userBookingHistory.result.length === 0 ? (<NoReservationUnderway MessageToDisplay="Encore aucune reservation" /> ) : (
 
                 userBookingHistory?.result?.map((item, index)=> (
 
@@ -126,6 +130,18 @@ function ReservationHistory()
                             
                             <div className="drawLineEffect"></div>
 
+                            {item.cost !== null ? (
+                                <div className="HistoryCardStationExtraInfo">
+                                    <p className="HistoryCardStationExtraInfoPrice">{item.cost} €</p>
+
+                                    <div className="HistoryCardStationExtraInfoWrap">
+                                        <p>{item.total_consumption} Kwh</p>
+                                        <p>+{item.total_consumption} km</p>
+                                        <p>{item.time_in_use} min</p>
+                                    </div>
+                                </div>
+                            ) : null}
+
                         </div>
 
                         <p className="HistoryCardStationDate">{transformIsoToUIRequiredFormat(item.start_time)}</p>
@@ -135,11 +151,11 @@ function ReservationHistory()
                 
             )}
 
-            {userBookingHistory?.result? (
+            {userBookingHistory?.result && userBookingHistory.result.length > 0 ?  (
 
-                            <Pagination resultLength={totalPages}
+                <Pagination resultLength={totalPages}
                             currentPage={currentPage}
-                            setCurrentPage={setCurrentPage} />
+                            setCurrentPage={setCurrentPage}/>
             ) : null}
 
             </div>
