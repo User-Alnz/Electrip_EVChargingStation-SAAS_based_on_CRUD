@@ -1,6 +1,11 @@
 import {useCallback, useState, useEffect, useMemo, useRef } from "react";
-import {setDataInCache, getDataInCache} from "../../../util/CachingData";
-import {returnTotal, priceKwh, TotalCost, WorkoutDistance, timeInCharge, batteryAnimation} from "./ReservationAnimationToolbox"
+import {setDataInCache,setDataInCacheAsObject, getDataInCache} from "../../../util/CachingData";
+import {returnTotal, priceKwh, TotalCost, WorkoutDistance, timeInCharge, batteryAnimation} from "./ReservationAnimationToolbox";
+import {finalConsumption, finalPrice, finalTimeInCharge, finalDistance} from "./ReservationAnimationToolboxValueOnly";
+import UpdateReservation from "../../../api/UpdateReservation";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+//import { toast } from "react-toastify";
 import "./ReservationAnimation.css"
 
 
@@ -23,12 +28,24 @@ type ReservationData = {
 
 };
 
+type FinalResultOfCharging = {
+    totalCost : number,
+    totalKWw : number,
+    totalTimeInCharge : number,
+    totalDistance : number
+}
+
 type ChargingAnimationProps = {
     reservation : ReservationData
 }
 
 function ChargingAnimation({reservation} : ChargingAnimationProps)
 {
+
+    const { auth, logout, setAuth } = useAuth();
+    const navigate = useNavigate();
+    const callAPI = useRef<UpdateReservation | null>(null);
+
     //This state rely on cache data to keep persistante data over refreshing pages, moving to new page etc.. 
     const [KwhPrice] = useState<number>(()=> {
         
@@ -45,9 +62,11 @@ function ChargingAnimation({reservation} : ChargingAnimationProps)
         
         return value;
     });
-    
-    const maxKwhCapacity = useRef(200);
+
+    const [finalDataCharging, setFinalDataCharging] = useState<FinalResultOfCharging>();
+    const maxKwhCapacity = useRef(100);
     const [KwhConsumption, setKwhConsumption] = useState<number>(1);
+    const [isCarLoaded, setIsCarLoaded] = useState<boolean>(false);
     
     //This overwrite previous instance of Date() and update time on each instancition. 
     //avoid creating new class and keep control over garbage collector and avoid relying on it.
@@ -65,21 +84,81 @@ function ChargingAnimation({reservation} : ChargingAnimationProps)
 
     //This create loop to rerender components on each second
     useEffect(() => {
-        const interval = setInterval(() => {
-            
-            //initiate value in loop 
-            const TotalLoaded = returnTotal(reservation.start_using as string, reservation.puiss_max, "loaded") as number;
-            setKwhConsumption(TotalLoaded);
+        
+        if(isCarLoaded) //This can be replaced to GET From database. || Caching for eaning time in developpemment Can be refacto later
+        {
+            const key = `RecapConsumption-${reservation.id}`;
+            const dataFromChache = getDataInCache(key);
 
-            if(now.getTime() >= endTime || KwhConsumption >= maxKwhCapacity.current)
-            clearInterval(interval);
-            else
-            setNow(new Date());
+            if(dataFromChache !== null && typeof dataFromChache === "object") 
+            setFinalDataCharging(dataFromChache);
+        }
 
-        }, 1000); //1000 ms = 1 second
-    
-        return () => clearInterval(interval); //Cleanup when component unmounts
-    }, []);
+        if (!auth?.token) {
+            console.warn("Issue : Token not found. you'll get logout");
+            return;
+        }
+
+        if(!isCarLoaded)
+        {
+            callAPI.current = new UpdateReservation(auth?.token, logout, navigate, setAuth);
+
+            const writeBodyRequest = async()=> {
+
+                const finalDataChargingToCache = {
+                    reservation_id : reservation.id,
+                    totalCost : finalPrice(reservation.start_using as string, reservation.end_time, KwhPrice, reservation.puiss_max as string, maxKwhCapacity.current),
+                    totalKWH : finalConsumption(reservation.start_using as string, reservation.end_time, reservation.puiss_max as string, maxKwhCapacity.current),
+                    totalTimeInCharge : finalTimeInCharge(reservation.start_using as string, reservation.end_time, reservation.puiss_max as string, maxKwhCapacity.current),
+                    totalDistance : finalDistance(reservation.start_using as string, reservation.end_time, reservation.puiss_max as string, maxKwhCapacity.current)
+                };
+                return finalDataChargingToCache;
+            }
+
+            const reachApi = async()=> {
+                const bodyRequest = await writeBodyRequest()
+                await callAPI.current?.updateReservation(bodyRequest);  
+            };
+
+            reachApi();
+        }
+
+        
+        if(!isCarLoaded)
+        {
+            const interval = setInterval(() => {
+                
+                //initiate value in loop 
+                const TotalLoaded = returnTotal(reservation.start_using as string, reservation.puiss_max, maxKwhCapacity.current ,"loaded") as number;
+                setKwhConsumption(TotalLoaded);
+
+                if(now.getTime() >= endTime || TotalLoaded >= maxKwhCapacity.current)
+                {
+                    setIsCarLoaded(true);
+
+                    const key = `RecapConsumption-${reservation.id}`;
+                    
+
+                    const finalDataChargingToCache = {
+                        reservation_id : reservation.id,
+                        totalCost : finalPrice(reservation.start_using as string, reservation.end_time, KwhPrice, reservation.puiss_max as string, maxKwhCapacity.current),
+                        totalKWH : finalConsumption(reservation.start_using as string, reservation.end_time, reservation.puiss_max as string, maxKwhCapacity.current),
+                        totalTimeInCharge : finalTimeInCharge(reservation.start_using as string, reservation.end_time, reservation.puiss_max as string, maxKwhCapacity.current),
+                        totalDistance : finalDistance(reservation.start_using as string, reservation.end_time, reservation.puiss_max as string, maxKwhCapacity.current)
+                    };
+
+                    setDataInCacheAsObject(key, finalDataChargingToCache, new Date(reservation.end_time).getTime());
+                    clearInterval(interval);
+                }
+                else
+                setNow(new Date());
+
+            }, 1000); //1000 ms = 1 second
+        
+            return () => clearInterval(interval); //Cleanup when component unmounts
+        }
+
+    }, [isCarLoaded]);
 
 
     /****
@@ -93,12 +172,12 @@ function ChargingAnimation({reservation} : ChargingAnimationProps)
 
     const displayTotalPercentage = useCallback((): JSX.Element => {
         
-       return  returnTotal(reservation.start_using as string, reservation.puiss_max, "%") as JSX.Element;
+       return  returnTotal(reservation.start_using as string, reservation.puiss_max, maxKwhCapacity.current, "%") as JSX.Element;
     }, []); 
 
     const displayKwhLoaded = useCallback(() : JSX.Element => {
 
-        return returnTotal(reservation.start_using as string, reservation.puiss_max, "Kwh") as JSX.Element;
+        return returnTotal(reservation.start_using as string, reservation.puiss_max, maxKwhCapacity.current, "Kwh") as JSX.Element;
     }, []);
 
     const displayCost = useCallback(() : JSX.Element => {
@@ -108,7 +187,7 @@ function ChargingAnimation({reservation} : ChargingAnimationProps)
 
     const displayDistance = useCallback((KwhConsumption : number) : JSX.Element  => {
 
-        return WorkoutDistance(KwhConsumption) as JSX.Element;
+        return WorkoutDistance(reservation.start_using as string, KwhConsumption) as JSX.Element;
     },[]);
 
     const displayTimeInUse = useCallback(() : JSX.Element => {
@@ -118,40 +197,77 @@ function ChargingAnimation({reservation} : ChargingAnimationProps)
 
     const runAnimation = useCallback(() : JSX.Element=>{
 
-        return batteryAnimation(reservation.start_using as string, reservation.puiss_max) as JSX.Element;
+        return batteryAnimation(reservation.start_using as string, reservation.puiss_max, maxKwhCapacity.current) as JSX.Element;
     },[]);
   
 
     return(
 
         <div className="ChargingMainWrapper">
+
+            {finalDataCharging && isCarLoaded ?
+            (<>
             
-            <div className="ChargingMenuTitle">
+                <div className="ChargingMenuTitle">
 
-                <div>
-                    {displayTotalPercentage()}
+                    <div>
+                        {<p style={{fontWeight: 700,fontSize: "x-large", alignSelf: "center"}}>100%</p>}
 
-                    <div className="ChargingMaxCapacity">
-                        <p>Maximum</p> 
-                        <p>{maxKwhCapacity.current}kw</p>
+                        <div className="ChargingMaxCapacity">
+                            <p>Maximum</p> 
+                            <p>{maxKwhCapacity.current}kw</p>
+                        </div>
+                        
                     </div>
-                    
-                </div>
                
 
-                <div>
-                    <p>{`${KwhPrice}€`}</p>
-                    {displayCost()}
-                </div> 
-            </div>
+                    <div>
+                        <p>{`${KwhPrice}€`}</p>
+                        {<p>{`${finalDataCharging.totalCost}`}€</p>}
+                    </div>
+                </div>
 
-            {runAnimation()}
+                {runAnimation()}
 
-            <div className="ChargingMenuInfo">
-                {displayKwhLoaded()}
-                {displayDistance(KwhConsumption)}
-                {displayTimeInUse()}
-            </div>
+                <div className="ChargingMenuInfo">
+                    {<p>{`${finalDataCharging.totalKWw} Kwh`}</p>}
+                    {<p>{`+ ${finalDataCharging.totalDistance} km`}</p>}
+                    {<p>{`${finalDataCharging.totalTimeInCharge} min`}</p>}
+                </div>
+            </>
+            ):(
+            <>
+
+                <div className="ChargingMenuTitle">
+
+                    <div>
+                        {displayTotalPercentage()}
+
+                        <div className="ChargingMaxCapacity">
+                            <p>Maximum</p> 
+                            <p>{maxKwhCapacity.current}kw</p>
+                        </div>
+                        
+                    </div>
+               
+
+                    <div>
+                        <p>{`${KwhPrice}€`}</p>
+                        {displayCost()}
+                    </div>
+                </div>
+
+                {runAnimation()}
+
+                <div className="ChargingMenuInfo">
+                    {displayKwhLoaded()}
+                    {displayDistance(KwhConsumption)}
+                    {displayTimeInUse()}
+                </div>
+
+            </>
+            )}
+
 
         </div>
     );
