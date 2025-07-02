@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "./contexts/AuthContext";
+import {SelectedViewProvider} from "./contexts/ReservationContext"
 
 /* ************************************************************************* */
 
@@ -62,6 +63,7 @@ createRoot(rootElement).render(
   <StrictMode>
     {/* AuthProvider fournit le context à l'ensemble de ce qui est encapsulé */}
     <AuthProvider>
+      <SelectedViewProvider>
       <RouterProvider router={router} />
       <ToastContainer
         position="bottom-right"
@@ -75,6 +77,7 @@ createRoot(rootElement).render(
         pauseOnHover
         theme="light"
       />
+      </SelectedViewProvider>
     </AuthProvider>
   </StrictMode>,
 );

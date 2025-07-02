@@ -6,7 +6,8 @@ import { Auth, useAuth } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader/Loader";
 import {delay} from "../util/GenerateDelay";
-import {GenRerender} from "../util/TriggerRerender"
+import {GenRerender} from "../util/TriggerRerender";
+import {useSelectedView} from "../contexts/ReservationContext"
 import NoReservationUnderway from "../components/Reservation/NoReservationReturned/NoReservationUnderway";
 import ReservationStationInfo from "../components/Reservation/ReservationUnderway/ReservationStationInfo";
 import ReservationStationDuration from "../components/Reservation/ReservationUnderway/ReservationStationDuration";
@@ -39,7 +40,7 @@ function Reservation()
 
     const [reservation, setReservation] = useState<ReservationData[]>([]);
     const [isReservationLoaded, setIsReservationLoaded ] = useState<boolean>(false);
-    const [selectedView, setSelectedView] = useState<"ongoing" | "history">("ongoing");
+    const {selectedView, setSelectedView} = useSelectedView();
     const LoaderSpec = { height: "200px", paddingTop: "80px" }; // to be used by <Loader/> in jsx returned
     const { auth, logout, setAuth } = useAuth();
     const navigate = useNavigate(); //use redirection
