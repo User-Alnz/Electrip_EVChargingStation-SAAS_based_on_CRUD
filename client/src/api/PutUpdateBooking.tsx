@@ -1,19 +1,21 @@
 import ApiCallBluePrint from "./ApiCallPatterm";
 
-class UpdateReservation extends ApiCallBluePrint{
-    protected HttpMethod(): "GET" | "PUT" | "POST" | "DELETE" {
+class PutUpdateBooking extends ApiCallBluePrint{
+
+    protected HttpMethod(): "PUT" | "GET" | "POST" | "DELETE" {
         return "PUT";
     }
     protected getEndpoint(): string {
-        return "updateConsumption";
+        return `updateBooking`;
     }
     protected doesReturnData(): boolean {
         return false;
     }
     protected doesReturnResponseOnly(): boolean {
-        return false;
+        return true;
     }
+
     
 }
 
-export default UpdateReservation;
+export default PutUpdateBooking;
