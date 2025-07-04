@@ -2,8 +2,7 @@ import Nav from "../components/Nav/Nav";
 import "./Reservation.css";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Auth, useAuth } from "../contexts/AuthContext";
-import { toast } from "react-toastify";
+import { useAuth } from "../contexts/AuthContext";
 import Loader from "../components/Loader/Loader";
 import {delay} from "../util/GenerateDelay";
 import {GenRerender} from "../util/TriggerRerender";
@@ -12,7 +11,7 @@ import NoReservationUnderway from "../components/Reservation/NoReservationReturn
 import ReservationStationInfo from "../components/Reservation/ReservationUnderway/ReservationStationInfo";
 import ReservationStationDuration from "../components/Reservation/ReservationUnderway/ReservationStationDuration";
 import ReservationHistory from "../components/Reservation/ReservationHistory/ReservationHistory";
-import AuthApi from "../api/AuthApi";
+import GetBooking from "../api/GetBooking";
 
 
 type ReservationData = {
@@ -44,65 +43,25 @@ function Reservation()
     const LoaderSpec = { height: "200px", paddingTop: "80px" }; // to be used by <Loader/> in jsx returned
     const { auth, logout, setAuth } = useAuth();
     const navigate = useNavigate(); //use redirection
+    const callAPI = useRef<GetBooking|null>(null);
 
     useEffect(() => {
 
     const getReservation = async () => {
             
-        try{
-            let  data;
-            let response;
+        try
+        {
 
-            response = await fetch(
-            `${import.meta.env.VITE_API_URL}/booking/`,
-            {
-              method: 'GET',
-              headers: {
-                'Authorization': `Bearer ${auth?.token}`,
-                'Content-Type': 'application/json',
-              },
-            });
+          let  data : ReservationData[] | any;
 
-          if(response.status == 403){
-          
-            const AuthToken : boolean | Auth = await AuthApi.tryRefreshToken();
-  
-            if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken)
-            {  
-              sessionStorage.setItem("user", JSON.stringify(AuthToken));
-              setAuth(AuthToken);
-  
+          callAPI.current = new GetBooking(auth?.token as string, logout, navigate, setAuth);
+          data = await callAPI.current.sendRequest();
 
-              response = await fetch(
-                `${import.meta.env.VITE_API_URL}/booking/`,
-                {
-                  method: 'GET',
-                  headers: {
-                    'Authorization': `Bearer ${AuthToken?.token}`,
-                    'Content-Type': 'application/json',
-                  },
-                });
-
-            }
-            else{
-              logout();
-              navigate("/");
-              toast.error("Votre session a expirée. Merci de vous reconnecter");
-            }  
-          }
-
-          if(response.status == 406 || response.status == 401){
-            logout();
-            navigate("/");
-            toast.error("Votre session a expirée. Merci de vous reconnecter");
-          }
-
-          data = await response.json();
-          
-          await delay(3000); //from /util directory
+          await delay(1000);
 
           setReservation(data);
           setIsReservationLoaded(true);
+
         }
         catch(err){
             console.error("Error fetching location or data:", err);
