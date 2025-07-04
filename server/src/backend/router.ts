@@ -33,6 +33,6 @@ router.put("/updateBooking", LoginUser.verifyToken, userBooking.Update_Booking);
 
 //-- Update Reservation consumption
 import userConsumption from "./Controller/UpdateConsumption/UpdateConsumption.js";
-router.put("/updateConsuption", LoginUser.verifyToken, userConsumption.Update_Consumption);
+router.put("/updateConsumption", LoginUser.verifyToken, userConsumption.Update_Consumption);
 
 export default router;
