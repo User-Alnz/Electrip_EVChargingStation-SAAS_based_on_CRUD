@@ -146,7 +146,47 @@ function batteryAnimation(start_using: string, puiss_max: string, maxKwhCapacity
             <div className="batteryOnloadDone"></div>
         </div>);
 
-
 }
 
-export {returnTotal, priceKwh, TotalCost, WorkoutDistance, timeInCharge, batteryAnimation};
+function loading(start_using: string, finalTime : number, puiss_max: string, maxKwhCapacity : number, option? : "jsx") : JSX.Element
+{
+    const power_Kwh = parseInt(puiss_max);
+    const start = new Date(start_using);
+    const TimeNow = new Date(finalTime);
+
+    let consumptionPercentage;
+    console.log(start.getTime())
+    console.log(TimeNow.getTime())
+
+    consumptionPercentage =  Math.floor(TimeNow.getTime() - start.getTime())/60000; //Convert to mintues
+    consumptionPercentage = (power_Kwh / 60) * consumptionPercentage;
+    consumptionPercentage = Math.round(consumptionPercentage);
+    consumptionPercentage = Math.min(
+        Number(((consumptionPercentage / maxKwhCapacity) * 100).toFixed(2)),
+        100 // Prevent overfilling visually
+      );
+
+
+    
+    if(option === "jsx")
+    return(
+        <div className="battery"> 
+            <div  style={{
+        position: "absolute",
+        top: "6px",
+        left: "6px",
+        height: "88px",
+        backgroundColor: "#00c87e",
+        borderRadius: "5px",
+        width: `${consumptionPercentage-3}%`,
+        content: '""',}}></div>
+        </div>
+        );
+    
+    
+    return(
+        <p style={{fontWeight: 700,fontSize: "x-large", alignSelf: "center"}}>{consumptionPercentage}%</p>
+    );
+}
+
+export {returnTotal, priceKwh, TotalCost, WorkoutDistance, timeInCharge, batteryAnimation, loading};
