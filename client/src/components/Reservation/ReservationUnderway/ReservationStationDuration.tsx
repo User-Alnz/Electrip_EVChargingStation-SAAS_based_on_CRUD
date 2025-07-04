@@ -1,12 +1,13 @@
 import EVBooking from "/EVBooking.png";
 import ReservationDisplayProgressionBar from "../ReservationProgressionBar/ReservationDisplayProgressionBar";
-import { Auth, useAuth } from "../../../contexts/AuthContext";
-import AuthApi from "../../../api/AuthApi";
+import { useAuth } from "../../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { transformIsoTo24HoursFormat, OutputRemainingTimeReservation } from "./ReservationStationToolBox";
 import { GenRerender } from "../../../util/TriggerRerender";
 import ChargingAnimation from "../ReservationAnimation/ReservationAnimation"
+import { useRef } from "react";
+import PutUpdateBooking from "../../../api/PutUpdateBooking";
 
 
 interface ReservationStationDurationProps 
@@ -39,63 +40,19 @@ function ReservationStationDuration({reservationProps, rerenderer} : Reservation
 {
     const { auth, logout, setAuth } = useAuth();
     const navigate = useNavigate();
+    const  callAPI = useRef<PutUpdateBooking|null>(null);
 
         const UpdateReservation = async( action : Option) => {
             try
             {
                 let response;
                 
-                response = await fetch(
-                `${import.meta.env.VITE_API_URL}/updateBooking`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${auth?.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        reservation_id : reservationProps.id,
-                        status : action 
-                    })
-                }
-                );
-
-                if(response.status == 403){
-          
-                    const AuthToken : boolean | Auth = await AuthApi.tryRefreshToken();
-          
-                    if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken) // there is one thing to enhance here 
-                    {  
-                      sessionStorage.setItem("user", JSON.stringify(AuthToken));
-                      setAuth(AuthToken);
-          
-                      response = await fetch(
-                        `${import.meta.env.VITE_API_URL}/updateBooking`,
-                        {
-                          method: 'PUT',
-                          headers: {
-                            'Authorization': `Bearer ${AuthToken?.token}`,
-                            'Content-Type': 'application/json',
-                          },
-                          body: JSON.stringify({
-                            reservation_id : reservationProps.id,
-                            status : action 
-                        })
-
-                      });
-                    }
-                    else{
-                      logout();
-                      navigate("/");
-                      toast.error("Votre session a expirée. Merci de vous reconnecter");
-                    }
-                }
-
-                if(response.status == 406 || response.status == 401){
-                    logout();
-                    navigate("/");
-                    toast.error("Votre session a expirée. Merci de vous reconnecter");
-                }
+                callAPI.current = new PutUpdateBooking(auth?.token as string, logout, navigate, setAuth);
+                
+                response = await callAPI.current.sendRequest({
+                    reservation_id : reservationProps.id,
+                    status : action
+                });
 
                 if(action === "cancelled" && response.ok)
                 toast.success("Votre reservation a été annulée avec succès.");

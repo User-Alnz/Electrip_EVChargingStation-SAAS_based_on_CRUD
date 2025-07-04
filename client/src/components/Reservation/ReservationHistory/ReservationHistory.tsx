@@ -2,12 +2,11 @@ import "./ReservationHistory.css";
 import location from "/location.png";
 import Pagination from "../../Pagination/Pagination";
 import NoReservationUnderway from "../NoReservationReturned/NoReservationUnderway";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Auth, useAuth } from "../../../contexts/AuthContext";
-import AuthApi from "../../../api/AuthApi";
-import { toast } from "react-toastify";
+import { useAuth } from "../../../contexts/AuthContext";
 import {transformIsoToUIRequiredFormat, interpretReservationStatus, defineBorderBoxStyle}  from "./ReservationHystoryToolBox";
+import GetReservationHistory from "../../../api/GetReservationHistory";
 
 
 interface bookingHistoryObject {
@@ -36,61 +35,19 @@ function ReservationHistory()
     const [ userBookingHistory, setUserBookingHistory ] = useState<bookingHistoryObject>();
     const { auth, logout, setAuth } = useAuth();
     const navigate = useNavigate();
+    const ApiCall = useRef<GetReservationHistory|null>(null);
 
     useEffect(() => {
 
         const returnUserReservationHistory = async () => {
 
             try
-            {
-                let response;
-                let data;
+            {   
+                let data : bookingHistoryObject | any;
 
-                response = await fetch(
-                `${import.meta.env.VITE_API_URL}/bookingHistory/?page=${currentPage}&pages=${totalPages}`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${auth?.token}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-                );
-
-                if(response.status == 403){
-          
-                    const AuthToken : boolean | Auth = await AuthApi.tryRefreshToken();
-          
-                    if(AuthToken && typeof(AuthToken) !== "boolean"  && "token" in AuthToken) 
-                    {  
-                      sessionStorage.setItem("user", JSON.stringify(AuthToken));
-                      setAuth(AuthToken);
-          
-                      response = await fetch(
-                        `${import.meta.env.VITE_API_URL}/bookingHistory/?page=${currentPage}&pages=${totalPages}`,
-                        {
-                          method: 'GET',
-                          headers: {
-                            'Authorization': `Bearer ${AuthToken?.token}`,
-                            'Content-Type': 'application/json',
-                          },
-                      });
-                    }
-                    else{
-                      logout();
-                      navigate("/");
-                      toast.error("Votre session a expirée. Merci de vous reconnecter");
-                    }
-          
-                }
-                
-                if(response.status == 406 || response.status == 401){
-                    logout();
-                    navigate("/");
-                    toast.error("Votre session a expirée. Merci de vous reconnecter");
-                }
-          
-                data = await response.json();
+                ApiCall.current = new GetReservationHistory(auth?.token as string, logout, navigate, setAuth, currentPage, totalPages);
+                await ApiCall.current.updateEndpointParameters(currentPage, totalPages);
+                data = await ApiCall.current.sendRequest();
 
                 setTotalPages(data.totalPages);
                 setUserBookingHistory(data);
@@ -99,6 +56,7 @@ function ReservationHistory()
             catch(err){
                 console.error("Error fetching location or data:", err);
             }
+            
         }
 
         returnUserReservationHistory();
