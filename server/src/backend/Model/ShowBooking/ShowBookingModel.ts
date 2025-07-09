@@ -25,7 +25,7 @@ class ShowBookingModel{
     async readUserbookingUnderway( userId : number ){
 
         const [displayReservation] = await SQL.query<RowsResult>(
-            "SELECT r.id, r.borne_id, r.status, r.start_time, r.start_using, r.end_time, s.id_station, s.n_station, s.ad_station, s.nbre_pdc, s.acces_recharge, s.accessibilite, s.puiss_max, s.type_prise FROM reservation r JOIN bornes b ON r.borne_id = b.id JOIN station s ON b.station_id = s.id WHERE NOW() BETWEEN r.start_time AND r.end_time AND r.user_id = ? AND (r.status IS NULL OR r.status != 'cancelled');",
+            "SELECT r.id, r.borne_id, r.status, r.start_time, r.start_using, r.end_time, s.id_station, s.n_station, s.ad_station, s.nbre_pdc, s.acces_recharge, s.accessibilite, s.puiss_max, s.type_prise, (SELECT JSON_ARRAYAGG(CASE WHEN EXISTS (SELECT 1 FROM reservation r2 WHERE r2.borne_id = b2.id AND NOW() BETWEEN r2.start_time AND r2.end_time AND (r2.status IS NULL OR r2.status != 'cancelled'))THEN 0 ELSE 1 END ) FROM bornes b2 WHERE b2.station_id = s.id) AS available FROM reservation r JOIN bornes b ON r.borne_id = b.id JOIN station s ON b.station_id = s.id WHERE NOW() BETWEEN r.start_time AND r.end_time AND r.user_id = ? AND (r.status IS NULL OR r.status != 'cancelled');",
             [userId]
         );
 

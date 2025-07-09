@@ -17,10 +17,30 @@ type ReservationData = {
     accessibilite: string,//'Lun-Vend 7AM à 8PM\nSam 7AM à 12PM',
     puiss_max: string, //'24',
     type_prise: string, //'Combo'
+    available : boolean [];
 };
 
 function ReservationStationInfo(reservationProps : ReservationData)
 {
+    function countAvailableBornes(available_bornesArray: boolean[],booleanType: boolean): number 
+    {
+        const count = available_bornesArray.filter((borne) => Boolean(borne) === booleanType).length;
+        return count;
+    }
+
+    function listOfAvailableBornes(available_bornesArray: boolean[]): JSX.Element 
+    {
+        const borneNotAvailable = countAvailableBornes(available_bornesArray, false);
+        const borneAvailable = countAvailableBornes(available_bornesArray, true);
+      
+        return (
+          <div>
+            <span className="greenSpot" /> <b>{borneAvailable}</b>{" "}
+            <span className="redSpot" /> <b>{borneNotAvailable}</b>
+          </div>
+        );
+    }
+
     return(
                 
         <section className="ReservationCard">
@@ -45,8 +65,8 @@ function ReservationStationInfo(reservationProps : ReservationData)
                                     <p>{reservationProps.nbre_pdc}</p>
 
                                     <p className="ReservationBoxStationDetailTitle">Places encores disponibles</p>
-
-                                    <div className="ReservationBoxAvaibility"><span className="greenSpot"></span><p>1</p><span className="redSpot"></span><p>0</p></div>
+                                    
+                                    {listOfAvailableBornes(reservationProps.available)}
 
                                 </div>
 

@@ -29,6 +29,7 @@ type ReservationData = {
     accessibilite: string,//'Lun-Vend 7AM à 8PM\nSam 7AM à 12PM',
     puiss_max: string, //'24',
     type_prise: string, //'Combo'
+    available : boolean[]
 };
 
 function Reservation()
