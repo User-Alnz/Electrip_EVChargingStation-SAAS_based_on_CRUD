@@ -1,16 +1,17 @@
 import type { LatLngTuple } from "leaflet";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import "./DisplayMap.css";
 import "leaflet/dist/leaflet.css";
-import type L from "leaflet";
 import { useCoordinates } from "../../contexts/EVStationContext.tsx";
 import { useAuth } from "../../contexts/AuthContext.tsx";
-import LeafletIconsRegister from "./markerIconsOnmap.ts";
 import Loader from "../Loader/Loader.tsx";
 import { useNavigate } from "react-router-dom";
 import GetStationAroundUser from "../../api/GetStationAroundUser.tsx";
 import { delay } from "../../util/GenerateDelay.ts";
+import Modal from "../Modal/Modal.tsx";
+import LocationMarker from "./UserMakerOnMap.tsx";
+import { defineWhichIconToPick } from "./DisplayMapToolBox.ts";
 
 //Json return from /EVstations/?latitude=
 type localisation = {
@@ -35,25 +36,6 @@ type ExtendedLocalisation = Omit<localisation, "coordinates"> & {
   available_bornes: boolean[];
 };
 
-function LocationMarker()
-{
-  const [position, setPosition] = useState<L.LatLng | null>(null);
-
-  const map = useMap();
-
-  useEffect(() => {
-    map.locate().on("locationfound", (informationGeolocObject) => {
-      setPosition(informationGeolocObject.latlng);
-      map.flyTo(informationGeolocObject.latlng, map.getZoom());
-    });
-  }, [map]);
-
-  return position === null ? null : (
-    <Marker position={position} icon={LeafletIconsRegister.UserLocation}>
-      <Popup>Vous êtes ici.</Popup>
-    </Marker>
-  );
-}
 
 function DisplayMap() 
 {
@@ -65,6 +47,9 @@ function DisplayMap()
   const { setCoordinatesOfCurrentStation } = useCoordinates();
   const { location, setLocation } = useCoordinates();
   const callAPI = useRef<GetStationAroundUser|null>(null);
+  const [showModalContext, setShowModalContext] = useState<null | "locationDenied" | "noStations">(null);
+  const [isAnswerYes, setIsAnswerYes] = useState(false);
+  const [triggerNewUseEffect, setTriggerNewUseEffect] = useState(0);
 
   //this function get latitude & longitude from browser  and use it later to fetch / get stations around user
   const getCurrentLocationOfUser = useCallback((): Promise<[number, number]> => 
@@ -75,7 +60,14 @@ function DisplayMap()
       {
         navigator.geolocation.getCurrentPosition(
           (position) => resolve([position.coords.latitude, position.coords.longitude]),
-          (error) => reject(error),
+          (error) => {
+            
+            //https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPositionError
+            if (error.code === error.PERMISSION_DENIED || // code 1
+                error.code === error.POSITION_UNAVAILABLE || // code 2
+                error.code === error.TIMEOUT) //code 3
+                setShowModalContext("locationDenied");
+          }
         );
       } 
       else 
@@ -88,38 +80,28 @@ function DisplayMap()
     setCoordinatesOfCurrentStation(item);
   };
 
-  //this function parse available_bornes from fetch to define which icone to use form LeafletIconsRegister.
-  function defineWhichIconToPick(available_bornes: boolean[]) {
-    const count = available_bornes.filter((borne) => borne).length; // get only if 1 || True
-
-    if (available_bornes.length === count) 
-      return LeafletIconsRegister.stationLocationBlue;
-    
-
-    if (count === 0)
-      return LeafletIconsRegister.stationLocationRed;
-    
-
-    if (count <= available_bornes.length / 2)
-      return LeafletIconsRegister.stationLocationYellow;
-    
-    // return a default icon if any condition is met. to prevent component to break while running.
-    return LeafletIconsRegister.stationLocationBlue;
-  }
-
-
   useEffect(() => {
     //this function fetch/get all satision Arround user location
     const returnAllStationsAroundUSer = async () => {
       try {
-        const newLocation: [number, number] = await getCurrentLocationOfUser();
-        setLocation(newLocation);
+        let newLocation: [number, number];
+
+        if(isAnswerYes === false)
+        {
+          newLocation = await getCurrentLocationOfUser();
+          setLocation(newLocation);
+        }
+        else
+        newLocation = location;
 
         callAPI.current = new GetStationAroundUser(auth?.token as string, logout, navigate, setAuth, newLocation);
 
         let  data;
         data = await callAPI.current.sendRequest();
-      
+        
+        if( !Array.isArray(data) || data.length === 0)
+        setShowModalContext("noStations");
+
         await delay(3000); // simply to run loader animation at least 3 second
 
         setEVStationCoordinates(data);
@@ -130,11 +112,46 @@ function DisplayMap()
     };
 
     returnAllStationsAroundUSer();
-  }, [getCurrentLocationOfUser, setLocation]);
+  }, [getCurrentLocationOfUser, setLocation, isAnswerYes, triggerNewUseEffect]);
 
   return (
    
     <section>
+
+        {showModalContext === "locationDenied" && (
+          <Modal
+            title="Localisation refusée"
+            message="Souhaitez-vous utiliser Paris comme position par défaut pour la démo ?"
+            show={showModalContext}
+            onConfirm={() => {
+              setLocation(location);
+              setIsAnswerYes(true);
+              setShowModalContext(null);
+            }}
+            onCancel={() => {
+              setShowModalContext(null);
+              navigate("/");
+            }}
+          />
+        )}
+
+        {showModalContext === "noStations" && (
+            <Modal
+            title="Vous n'avez aucune station autour de votre position"
+            message="Souhaitez-vous utiliser Paris comme position par défaut pour la démo ?"
+            show={showModalContext}
+            onConfirm={() => {
+              setLocation([48.866667, 2.333333]); // Force mapping to Paris
+              setIsAnswerYes(true);
+              setTriggerNewUseEffect(value => value + 1);
+              setShowModalContext(null);
+            }}
+            onCancel={() => {
+              setShowModalContext(null);
+              navigate("/");
+            }}
+          />
+        )}
 
       {!isEVStationcoordinatesLoaded ? (<Loader/>) : null}
 
@@ -159,7 +176,7 @@ function DisplayMap()
           ))}
 
           
-          <LocationMarker />
+          <LocationMarker isAnswerYes={false} location={location} trigger={triggerNewUseEffect}/>
         </MapContainer>
 
     </section>
