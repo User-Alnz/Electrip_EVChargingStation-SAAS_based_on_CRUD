@@ -155,8 +155,6 @@ function loading(start_using: string, finalTime : number, puiss_max: string, max
     const TimeNow = new Date(finalTime);
 
     let consumptionPercentage;
-    console.log(start.getTime())
-    console.log(TimeNow.getTime())
 
     consumptionPercentage =  Math.floor(TimeNow.getTime() - start.getTime())/60000; //Convert to mintues
     consumptionPercentage = (power_Kwh / 60) * consumptionPercentage;

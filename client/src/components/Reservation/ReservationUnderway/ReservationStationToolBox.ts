@@ -21,6 +21,9 @@ function OutputRemainingTimeReservation( end_time_dateIsoFormat : string) : stri
     delta = Math.floor(delta / 60000); //convet milisecond to minutes
     delta = delta % 60; //find out remaning time out of one hour
 
+    if(delta < 0)
+    return `0 min`;
+
     return `${delta} min`;
 }
 
