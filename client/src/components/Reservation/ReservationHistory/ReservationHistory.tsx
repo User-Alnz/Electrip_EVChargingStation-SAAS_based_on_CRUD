@@ -94,7 +94,7 @@ function ReservationHistory()
 
                                     <div className="HistoryCardStationExtraInfoWrap">
                                         <p>{item.total_consumption} Kwh</p>
-                                        <p>+{item.total_consumption} km</p>
+                                        <p>+{item.total_distance} km</p>
                                         <p>{item.time_in_use} min</p>
                                     </div>
                                 </div>
