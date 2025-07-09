@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 import Footer from "../components/Footerhome/Footerhome";
 import Header from "../components/Header/Header";
@@ -13,8 +14,28 @@ import ImgCar from "/img_voiture.jpg";
 import MarkerAbout from "/marker_about.png";
 import MarkerCharger from "/marker_borne.png";
 import MarkerCar from "/marker_voiture.png";
+import { useCallback } from "react";
 
-function HomePage() {
+function HomePage() 
+{
+  const { auth } = useAuth();
+
+  const displayButton = useCallback((authEndpoint : string, notAuthEndpoint : string , message : string) => 
+  {
+    return(
+      <>
+        {auth ? (
+          <Link to={authEndpoint}>
+            <button type="button">{message}</button>
+          </Link>
+          ):(
+          <Link to={notAuthEndpoint}>
+            <button type="button">{`${message}`}</button>
+          </Link>)}
+      </>
+    )
+  },[])
+
   return (
     <>
       <Header />
@@ -27,15 +48,12 @@ function HomePage() {
             </div>
             <div className="homeContent">
               <p>
-                Avec notre service de localisation avancé, Electrip vous
-                garantie de trouver rapidement une borne de recharge dans la
-                région, ville, arrondissement souhaité. Vous pouvez également
-                définir votre périmètre de recherche pour faciliter votre
-                recherche.
+                Avec notre service de localisation avancé, Electrip vous garantit de trouver 
+                rapidement une borne de recharge dans votre région, 
+                ville ou arrondissement. Vous retrouverez toutes les stations 
+                disponibles autour de votre position dans un périmètre de 10 km.
               </p>
-              <Link to="/trouver_une_borne">
-                <button type="button">Trouver une borne</button>
-              </Link>
+              {displayButton("/trouver_une_borne", "/mon_compte", "Trouver une bone")}
             </div>
           </div>
           <img className="imgHome" src={ImgCharger} alt="cliqué d'une borne" />
@@ -47,19 +65,16 @@ function HomePage() {
           <div className="homeInfo2">
             <div className="homeTitle">
               <img src={MarkerCar} alt="cliché d'une voiture" />
-              <h2>Trouver une voiture</h2>
+              <h2>Suivre Votre reservation</h2>
             </div>
             <div className="homeContent">
               <p>
-                De la même manière que pour trouver une borne, vous pouvez louer
-                et localiser rapidement un véhicule électrique dans la région,
-                ville, arrondissement que vous souhaité, avec toujours la
-                possibilité de définir votre périmètre de recherche pour
-                faciliter votre recherche.
+              De la même manière que pour trouver une borne, vous pouvez 
+              suivre votre réservation en temps réel, brancher votre voiture,
+              annuler votre réservation, consulter votre consommation en temps réel, 
+              puis accéder à tout votre historique.
               </p>
-              <Link to="/trouver_une_voiture">
-                <button type="button">Trouver une voiture</button>
-              </Link>
+              {displayButton("/reservation", "/mon_compte", "Mes reservation")}
             </div>
           </div>
           <img className="imgHome" src={ImgCar} alt="cliché d'une voiture" />
@@ -75,10 +90,8 @@ function HomePage() {
             </div>
             <div className="homeContent">
               <p>
-                Electrip est la première super-appli française de localisation
-                de borne de recharge et de location de véhicule électrique. Nous
-                luttons pour des villes plus respirable en offrant de meilleures
-                alternatives à la voiture thermique.
+              Electrip est la première super-appli française de localisation de bornes de recharge. 
+              Nous luttons pour des villes plus respirables en offrant de meilleures alternatives à la voiture thermique.
               </p>
               <ul>
                 <li>Plus de 2 millions d'usagés sur nos services</li>
@@ -132,14 +145,14 @@ function HomePage() {
             </details>
             <details className="homeDetails">
               <summary className="homeSummary">
-                Combien de temps puis-je utiliser une borne de recharge ?
+                Puis je annuler ma reservation ?
                 <img
                   className="buttonplus"
                   src={Buttonplus}
                   alt="bouton pour developper"
                 />
               </summary>
-              <p>La durée minimal est de 15min est ne peut exéder 2h00.</p>
+              <p>Oui, à condition que vous n'ayez pas encore utilisé la borne</p>
             </details>
             <details className="homeDetails">
               <summary className="homeSummary">
@@ -151,12 +164,12 @@ function HomePage() {
                 />
               </summary>
               <p>
-                Vous trouverez toutes les informations dans l'onglet "Tarifs".
+                Entre 0,15 € et 0,75 € le kWh. Soit entre 15 € et 75 € pour 100 kWh. Bien évidemment, ce prix varie en fonction de la puissance de la prise qui vous est proposée.
               </p>
             </details>
             <details className="homeDetails">
               <summary className="homeSummary">
-                Combien de temps puis-je me véhiculer avec le véhicule loué ?
+                Combien de temps puis-je louer une borne ?
                 <img
                   className="buttonplus"
                   src={Buttonplus}
@@ -164,8 +177,7 @@ function HomePage() {
                 />
               </summary>
               <p>
-                Il n'y a aucune limite de temps, vous payez au prorata du temps
-                de location
+                La durée standard est d'une heure pour faciliter le roulement avec d'autres utiliseurs.
               </p>
             </details>
           </div>

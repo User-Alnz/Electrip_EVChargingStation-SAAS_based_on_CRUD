@@ -11,13 +11,13 @@ function Header() {
       <section className="headerContenair">
         <article className="headerInfos">
           <h1>
-            Louez ou rechargez votre véhicule n'importe où en France, à
+            Rechargez votre véhicule n'importe où en France, à
             n'importe quelle heure
           </h1>
           <p>
             Electrip est l'outil de réservation tout-en-un, consultable à la
             fois sur votre ordinateur, votre tablette, mais également sur votre
-            mobile. Avec Electrip, louez ou rechargez votre véhicule électrique
+            mobile. Avec Electrip, rechargez votre véhicule électrique
             au plus proche de votre position.
           </p>
         </article>
