@@ -20,7 +20,8 @@ import Reservation from "./pages/Reservation"
 
 import ProtectedRoute from "./contexts/ProtectedRoutes";
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
   {
     path: "/", // The root path
     element: <HomePage />
@@ -47,8 +48,10 @@ const router = createBrowserRouter([
     path: "/Conditions_Generales_d'Utilisation",
     element: <CGU />,
   },
-  // Try adding a new route! For example, "/about" with an About component
-]);
+  ],
+  {
+    basename: import.meta.env.BASE_URL, // Inject base URL when React Router your app is mounted under /Electrip. BASE_URL is injected from vite.config.ts
+  });
 
 /* ************************************************************************* */
 

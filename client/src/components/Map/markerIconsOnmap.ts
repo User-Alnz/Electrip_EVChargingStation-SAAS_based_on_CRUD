@@ -1,8 +1,10 @@
 import L from "leaflet";
 
+const base = import.meta.env.BASE_URL; // from vite.config.ts
+
 const LeafletIconsRegister = {
   UserLocation: new L.Icon({
-    iconUrl: "/marker_you-are-here.png",
+    iconUrl: `${base}/marker_you-are-here.png`,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -11,7 +13,7 @@ const LeafletIconsRegister = {
   }),
 
   stationLocationBlue: new L.Icon({
-    iconUrl: "/marker_station_blue.png",
+    iconUrl: `${base}/marker_station_blue.png`,
     iconSize: [39, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -20,7 +22,7 @@ const LeafletIconsRegister = {
   }),
 
   stationLocationRed: new L.Icon({
-    iconUrl: "/marker_station_red.png",
+    iconUrl: `${base}/marker_station_red.png`,
     iconSize: [39, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -29,7 +31,7 @@ const LeafletIconsRegister = {
   }),
 
   stationLocationYellow: new L.Icon({
-    iconUrl: "/marker_station_yellow.png",
+    iconUrl: `${base}/marker_station_yellow.png`,
     iconSize: [39, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],

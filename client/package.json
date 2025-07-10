@@ -5,6 +5,7 @@
     "check-types": "tsc --noEmit",
     "dev": "vite",
     "build": "tsc && vite build",
+    "postbuild":"cp -R ./src/assets/fonts ./dist/assets/ && echo '✅ Build complete! and fonts copied in dist'",
     "preview": "vite preview"
   },
   "dependencies": {
