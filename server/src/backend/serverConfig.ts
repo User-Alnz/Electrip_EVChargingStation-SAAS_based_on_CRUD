@@ -15,9 +15,12 @@ const server = express();
 
     if (!process.env.CLIENT_URL)
         throw new Error('CLIENT_URL is missing from .env file');
+
+    if (!process.env.REVERSE_PROXY_URL)
+        throw new Error('REVERSE_PROXY_URL is missing from .env file');
         
     server.use(cors({
-        origin: [process.env.CLIENT_URL as string], // Define origins allowed to listen requests
+        origin: [process.env.CLIENT_URL as string, process.env.REVERSE_PROXY_URL as string], // Define origins allowed to listen requests
         methods: 'GET,POST,PUT,DELETE', // These  Define http methods allowed
         //allowedHeaders: ['Content-Type', 'Authorization'] // Allow only certain request headers
         credentials: true

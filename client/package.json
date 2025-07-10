@@ -5,7 +5,7 @@
     "check-types": "tsc --noEmit",
     "dev": "vite",
     "build": "tsc && vite build",
-    "postbuild":"cp -R ./src/assets/fonts ./dist/assets/ && echo '✅ Build complete! and fonts copied in dist'",
+    "postbuild":"cp -R ./src/assets/fonts ./dist/assets/ && echo '✅ Build complete! and fonts copied in dist\n if fron parent Dir, run to deploy =>\t npm run DeployFront'",
     "preview": "vite preview"
   },
   "dependencies": {

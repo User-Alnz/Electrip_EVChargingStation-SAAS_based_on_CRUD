@@ -1,0 +1,27 @@
+{
+  "name": "electrip_evchargingstation",
+  "version": "1.0.0",
+  "description": "Deployment tool",
+  "homepage": "https://github.com/User-Alnz/Electrip_EVChargingStation-SAAS_based_on_CRUD#readme",
+  "bugs": {
+    "url": "https://github.com/User-Alnz/Electrip_EVChargingStation-SAAS_based_on_CRUD/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/User-Alnz/Electrip_EVChargingStation-SAAS_based_on_CRUD.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "build-frontend": "npm run build --workspace=client",
+    "build-backend": "npm run build --workspace=server",
+    "DeployFront": "./bin/bash/deploy.sh front",
+    "DeployBack": "./bin/bash/deploy.sh back"
+  }
+}

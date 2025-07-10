@@ -6,12 +6,13 @@
   "scripts": {
     "test": "jest",
     "test-db": "tsx ./src/backend/Database/testDatabaseConnection.ts",
-    "test-prod-db": "node ./dist/backend/Database/testDatabaseConnection.js",
+    "test-prod-db": "node /backend/Database/testDatabaseConnection.js",
     "dev": "tsx watch --clear-screen=false ./src/backend/server.ts",
-    "prod": "node dist/backend/server.js",
+    "prod": "node backend/server.js",
     "build": "tsc -p tsconfig.json",
-    "postbuild": "cp package.json package-lock.json .env ./dist/ && echo '✅ Build complete! /dist created ! and package.json, package-lock.json, and .env copied to dist/'",
-    "installBackend": "npm install --omit=dev"
+    "postbuild": "cp package.json package-lock.json .env ./dist/ && echo '✅ Build complete! /dist created ! and package.json, package-lock.json, and .env copied to dist/\nif fron parent Dir, run to deploy =>\t DeployBack'",
+    "installBackend": "npm install --omit=dev",
+    "runBackend" : "pm2 start backend/server.js --name App2_Electrip"
   },
   "dependencies": {
     "argon2": "^0.41.1",
