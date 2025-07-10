@@ -36,13 +36,20 @@ const server = express();
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
 
-    const pathApp1 = path.join(__dirname, "../../../client/app1"); //Define which dist/app or file to serve from client
-    console.info("Serving file from pathApp1 :", pathApp1);
-    server.use("/app1", express.static(pathApp1, { index: "index.html" }));
+    const pathApp = path.join(__dirname, "../../../client/dist/"); //Define which dist/app or file to serve from client
+    const pathAssets = path.join(pathApp, "assets");
+    console.info("Serving file from pathApp :", pathApp);
+    server.use("/Electrip/assets", express.static(pathAssets));
+    server.use("/Electrip", express.static(pathApp, { index: "index.html" }));
 
 /* Rooting */
 
-    server.use(router);
+    server.use("/Electrip",router);
+
+/* Fallback route for React Router */
+    server.get("/Electrip/*", (req, res ) =>{
+        res.sendFile(path.join(pathApp, "index.html"));
+    });
 
 /* Error handling */
 

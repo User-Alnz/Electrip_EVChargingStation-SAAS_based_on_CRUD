@@ -7,7 +7,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "../serverBuilt/dist", // Output folder for compiled JS files
+    "outDir": "./dist", // Output folder for compiled JS files
     "rootDir": "./src", // Folder where your TypeScript files are located
     "resolveJsonModule": true, // If you're using JSON files
     "removeComments": true  //remove all comments 
