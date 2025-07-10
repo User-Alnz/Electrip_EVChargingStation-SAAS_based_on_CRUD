@@ -1,5 +1,6 @@
 SERVER_PORT=3310
 CLIENT_URL=http://localhost:5500
+REVERSE_PROXY_URL=http://localhost:3340
 DB_HOST=localhost
 DB_PORT=3306
 JWT_SECRET= openssl rand -hex 64 (sercure because 64 bytes = 512 bits | recomandation sugest to use at least 32 bytes)
