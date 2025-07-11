@@ -88,9 +88,7 @@ function ReservationStationDuration({reservationProps, rerenderer} : Reservation
                     <p className="ReservationBoxTitle">Ma reservation</p>
                 </div>
 
-
-
-                <div className="wrapReservationBox"  style={{ flexDirection: reservationProps.status === "used" ? 'column' : 'row'}}>
+                <div className="wrapReservationBox" style={reservationProps.status === "used" ? { flexDirection: "column" } : {}}>
 
                     <div style={{ alignSelf: reservationProps.status === "used" ? 'center' : 'null'}}>
                         <div className="WrapReservationBoxDurationInfo">   

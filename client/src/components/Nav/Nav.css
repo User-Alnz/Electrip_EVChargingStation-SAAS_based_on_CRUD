@@ -86,8 +86,8 @@
 }
 .menuBubble {
   position: absolute;
-  top: 100px;
-  right: 30px;
+  top: 50px;
+  right: 10px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 5px 20px rgba(46, 51, 51, 0.75);
