@@ -53,7 +53,7 @@ function HomePage()
                 ville ou arrondissement. Vous retrouverez toutes les stations 
                 disponibles autour de votre position dans un périmètre de 10 km.
               </p>
-              {displayButton("/trouver_une_borne", "/mon_compte", "Trouver une bone")}
+              {displayButton("/trouver_une_borne", "/mon_compte", "Trouver une borne")}
             </div>
           </div>
           <img className="imgHome" src={ImgCharger} alt="cliqué d'une borne" />
@@ -65,14 +65,14 @@ function HomePage()
           <div className="homeInfo2">
             <div className="homeTitle">
               <img src={MarkerCar} alt="cliché d'une voiture" />
-              <h2>Suivre Votre reservation</h2>
+              <h2>Suivre votre reservation</h2>
             </div>
             <div className="homeContent">
               <p>
               De la même manière que pour trouver une borne, vous pouvez 
               suivre votre réservation en temps réel, brancher votre voiture,
               annuler votre réservation, consulter votre consommation en temps réel, 
-              puis accéder à tout votre historique.
+              puis accéder à l'ensemble de votre historique.
               </p>
               {displayButton("/reservation", "/mon_compte", "Mes reservation")}
             </div>
@@ -90,13 +90,13 @@ function HomePage()
             </div>
             <div className="homeContent">
               <p>
-              Electrip est la première super-appli française de localisation de bornes de recharge. 
-              Nous luttons pour des villes plus respirables en offrant de meilleures alternatives à la voiture thermique.
+              Electrip est la première super-app française de localisation de bornes de recharge. 
+              Nous œuvrons pour des villes plus respirables en offrant de meilleures alternatives à la voiture thermique.
               </p>
               <ul>
-                <li>Plus de 2 millions d'usagés sur nos services</li>
+                <li>Plus de 2 millions d'usagés utilisent nos services</li>
                 <li>
-                  Large couverture avec environ 70% du territoire Français.
+                  Une large couverture avec environ 70% du territoire français.
                 </li>
               </ul>
             </div>
@@ -140,12 +140,12 @@ function HomePage()
                 />
               </summary>
               <p>
-                Vous trouverez toutes les informations dans l'onglet "Tarifs".
+                Toutes les informations sont disponibles dans l'onglet "Tarifs".
               </p>
             </details>
             <details className="homeDetails">
               <summary className="homeSummary">
-                Puis je annuler ma reservation ?
+                Puis-je annuler ma reservation ?
                 <img
                   className="buttonplus"
                   src={Buttonplus}
@@ -156,7 +156,7 @@ function HomePage()
             </details>
             <details className="homeDetails">
               <summary className="homeSummary">
-                Quel est le prix d'une location d'un véhicule électrique ?
+                Quel est le prix  environ d'une location pour recharger mon véhicule électrique ?
                 <img
                   className="buttonplus"
                   src={Buttonplus}
@@ -177,7 +177,7 @@ function HomePage()
                 />
               </summary>
               <p>
-                La durée standard est d'une heure pour faciliter le roulement avec d'autres utiliseurs.
+                La durée standard est d'une heure afin de faciliter le roulement avec d'autres utiliseurs.
               </p>
             </details>
           </div>
